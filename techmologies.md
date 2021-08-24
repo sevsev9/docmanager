@@ -11,3 +11,4 @@
     - In-Memory
   - [UnionFS](https://github.com/streamich/unionfs)
     - Creates a union of multiple FS file systems.
+  - [S3 Compliant Self-Hosted](https://geekflare.com/self-hosted-s3/)
