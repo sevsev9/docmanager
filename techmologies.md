@@ -8,4 +8,6 @@
   - [kba-vfs](https://github.com/kba/vfs)
     - fs simluated vfs
   - [javVFS](https://github.com/Anarcroth/jayVFS)
-   - In-Memory
+    - In-Memory
+  - [UnionFS](https://github.com/streamich/unionfs)
+    - Creates a union of multiple FS file systems.
