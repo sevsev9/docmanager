@@ -15,3 +15,6 @@ The aim of this application is to help people archive, sort, search and find ana
     - BootstrapVue (Components)
 
 ### Backend
+  - NodeJS
+    - Typescript (Type Safety)
+    - 
