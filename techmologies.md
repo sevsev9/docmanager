@@ -1,0 +1,11 @@
+# VFS Links for evaluation
+  - [Medium / nodejs mock (v)fs tutorial](https://medium.com/nerd-for-tech/testing-in-node-js-easy-way-to-mock-filesystem-883b9f822ea4)
+  - [fuse-native](https://github.com/fuse-friends/fuse-native)
+    - Multithreaded FUSE bindings
+    - uses linux fuse kernel api
+  - [memfs](https://www.npmjs.com/package/memfs)
+    - In-Memory
+  - [kba-vfs](https://github.com/kba/vfs)
+    - fs simluated vfs
+  - [javVFS](https://github.com/Anarcroth/jayVFS)
+   - In-Memory
