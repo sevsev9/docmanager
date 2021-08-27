@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "multer-minio-storage-engine": "^1.0.0"
+  }
+}
