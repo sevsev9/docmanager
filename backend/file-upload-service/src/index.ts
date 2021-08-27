@@ -27,30 +27,14 @@ const upload = Multer({
         },
         objectName: function (req:any, file:any, cb:Function) {
             cb(null, ""+file.originalname);
-        },
+        }
     })
 });
 
-app.get('/list', (req: Request, res: Response) => {
-    const list: Array<BucketItem> = [];
-    let stream = minioClient.extensions.listObjectsV2WithMetadata(process.env.MINIO_BUCKET!, '', true, '');
-    stream.on('data', function (obj: BucketItem) {
-        list.push(obj);
-    });
-    stream.on('err', function (err: any) {
-        console.log(err);
-        res.status(500);
-        res.send(err);
-        res.end();
-    });
-    stream.on('end', () => {
-        res.status(200);
-        let str: String = JSON.stringify(list);
-        res.send(str);
-        res.end();
-    });
+app.post("/uploadfile", upload.array("upload", 3), function (req, res) {
+    // @ts-ignore
+    res.send("Successfully uploaded " +req.files.length + " files!");
 });
-
 
 minioClient.bucketExists(process.env.MINIO_BUCKET!, function (error: any, exists: boolean) {
     if (error) {

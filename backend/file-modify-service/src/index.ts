@@ -1,7 +1,6 @@
 import express, {Application, Request, Response, NextFunction} from "express";
 import {BucketItem, Client} from "minio";
-import Multer from "multer";
-const MulterMinIO = require("multer-minio-storage-engine");
+import {CopyConditions} from "minio";
 import bodyParser from "body-parser";
 
 require('dotenv').config({ path: __dirname+"/../.env"});
@@ -15,20 +14,6 @@ const minioClient:Client = new Client({
     useSSL: (process.env.MINIO_SECURE === 'true'),
     accessKey: process.env.MINIO_ACCESSKEY!,
     secretKey: process.env.MINIO_SECRETKEY!
-});
-
-const upload = Multer({
-    storage: MulterMinIO({
-        // @ts-ignore
-        minio: minioClient,
-        bucketName: process.env.MINIO_BUCKET!,
-        metaData: function (req:any, file:any, cb:Function) {
-            cb(null, {fieldName: file.fieldname});
-        },
-        objectName: function (req:any, file:any, cb:Function) {
-            cb(null, ""+file.originalname);
-        },
-    })
 });
 
 app.get('/list', (req: Request, res: Response) => {
@@ -51,6 +36,50 @@ app.get('/list', (req: Request, res: Response) => {
     });
 });
 
+app.get('/delete', (req: Request, res: Response) => {
+    if (req.query.filename && typeof req.query.filename === "string") {
+        minioClient.removeObject(process.env.MINIO_BUCKET!, req.query.filename, function(err) {
+            if (err) {
+                return console.log('Unable to remove object', err)
+            }
+            console.log('Removed the object')
+        });
+    } else {
+        res.status(400);
+        res.send("Malformed request!");
+    }
+
+});
+
+// copys the file with a new name and deletes the old one
+app.get('/rename', (req: Request, res: Response) => {
+    if (typeof req.query.filename === "string" && typeof req.query.newname === "string") {
+        let filename = ""+req.query.filename;
+        minioClient.copyObject(process.env.MINIO_BUCKET!, req.query.newname, req.query.filename, new CopyConditions(), function (e, data) {
+            if (e) {
+                return console.log(e);
+            } else {
+                minioClient.removeObject(process.env.MINIO_BUCKET!, filename, function(err) {
+                    if (err) {
+                        return console.log('Unable to remove object', err);
+                    } else {
+                        res.status(200);
+                        res.send("Successfully copied the Object!");
+                        res.end();
+                    }
+                });
+            }
+        })
+    } else {
+        res.status(400);
+        res.send("Malformed request!");
+        res.end();
+    }
+
+    res.status(500);
+    res.send("An error occurred during processing. Please report this.");
+    res.end();
+});
 
 minioClient.bucketExists(process.env.MINIO_BUCKET!, function (error: any, exists: boolean) {
     if (error) {
