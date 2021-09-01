@@ -1,5 +1,6 @@
 export interface Document {
     name: String,
+    eTag: String,
     tags: Array<String>,
     content: String,
     category: String,
