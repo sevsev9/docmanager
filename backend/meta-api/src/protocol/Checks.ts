@@ -11,7 +11,7 @@ export function checkDocument(doc: Object) {
 }
 
 export function createDocument(doc: Object) {
-    // date has to be formatted like: YYYY-MM-DDTHH:MM:SS
+    // date has to be formatted like: YYYY-MM-DD`T`HH:MM:SS or otherwise jsDate parsable
     const date = (typeof doc.from.getDate === "function") ? doc.from : new Date(doc.from);
     const upload = (typeof doc.upload_date.getDate === "function") ? doc.upload_date : Date.now();
     return new Document({
