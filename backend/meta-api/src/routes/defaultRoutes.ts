@@ -11,5 +11,9 @@ app.get('*', (req: Request, res: Response) => {
 
 app.get("/", (req: Request, res: Response) => {
     res.status(200);
-    res.send("")
+    res.send({
+        error: false,
+        msg: "Hello from API!"
+    });
+    res.end();
 });
