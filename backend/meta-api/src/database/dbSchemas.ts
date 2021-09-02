@@ -9,7 +9,8 @@ const dbDocument = new Schema<Document>({
     category: {type: String, required: true},
     description: {type: String, required: true},
     upload_date: {type: Date, required: true},
-    from: {type: Date, required: false}  //when the document was issued or received
+    thumbnail_etag: {type: String, required: true},
+    from: {type: Date, required: false}  //when the document was issued or received by the user
 });
 
 const dbUser = new Schema<User>({

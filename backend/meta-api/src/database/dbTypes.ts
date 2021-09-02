@@ -6,7 +6,8 @@ export interface Document {
     category: String,
     description: String,
     upload_date: Date,
-    from: Date  //when the document was issued or received
+    thumbnail_etag: String,
+    from: Date  //when the document was issued or received by the user
 }
 
 export interface User {
