@@ -1,11 +1,11 @@
-import express, {Application, Response, Request} from "express";
+import express from "express";
 import dotenv from "dotenv";
-import {DocumentModel, UserModel} from "./database/dbSchemas";
 import {dbConnect} from "./database/dbUtil";
 
 dotenv.config();
 
 export const app = express();
+app.use(express.json());
 
 dbConnect(
     process.env.MONGODB_HOST!,
