@@ -1,5 +1,5 @@
 import express, {Application, Request, Response, NextFunction} from "express";
-import {BucketItem, Client} from "minio";
+import {Client} from "minio";
 import Multer from "multer";
 const MulterMinIO = require("multer-minio-storage-engine");
 import bodyParser from "body-parser";
@@ -34,6 +34,29 @@ const upload = Multer({
 app.post("/uploadfile", upload.array("upload", 3), function (req, res) {
     // @ts-ignore
     res.send("Successfully uploaded " +req.files.length + " files!");
+});
+
+app.get('/presigned/*', (req, res) => {
+    minioClient.presignedUrl(
+        (req.originalUrl.includes("upload")) ? "POST" : "GET", process.env.MINIO_BUCKET!,
+        (req.body.for_file) ? `${req.body.for_file}-icon.${req.body.extension}` : req.body.filename,
+        10*60,
+        (err, presignedUrl) => {
+            if (err) {
+                res.status(500);
+                res.send({
+                    error: true,
+                    msg: err.toString()
+                });
+            } else {
+                res.status(200);
+                res.send({
+                    error: false,
+                    data: presignedUrl
+                });
+            }
+            res.end();
+    })
 });
 
 minioClient.bucketExists(process.env.MINIO_BUCKET!, function (error: any, exists: boolean) {
