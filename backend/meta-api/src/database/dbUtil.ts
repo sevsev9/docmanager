@@ -1,9 +1,9 @@
 import {connect} from "mongoose";
 
-export function dbConnect(host: String, port: Number | String, database: String, username: String, password: String) {
+export function dbConnect(host: String, port: Number | String, authDatabase: String, username: String, password: String) {
     return new Promise<string>(async (resolve, reject) => {
         try {
-            await connect(`mongodb://${username}:${password}@${host}:${port}/${database}`, {
+            await connect(`mongodb://${username}:${password}@${host}:${port}/?authSource=${authDatabase}&readPreference=primary`, {
                 // @ts-ignore
                 useNewUrlParser: true,
                 useUnifiedTopology: true

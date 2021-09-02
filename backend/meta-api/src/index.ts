@@ -5,12 +5,12 @@ import {dbConnect} from "./database/dbUtil";
 
 dotenv.config();
 
-const app = express();
+export const app = express();
 
 dbConnect(
     process.env.MONGODB_HOST!,
     process.env.MONGODB_PORT!,
-    process.env.MONGODB_DATABASE!,
+    process.env.MONGODB_AUTHDATABASE!,
     process.env.MONGODB_USER!,
     process.env.MONGODB_PASSWORD!
 ).then(msg => {
@@ -22,6 +22,5 @@ dbConnect(
     console.log(err);
     process.exit(-1);
 })
-
 
 
