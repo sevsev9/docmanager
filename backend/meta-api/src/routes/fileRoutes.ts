@@ -1,19 +1,30 @@
-import {Request, Response, NextFunction} from "express";
+import {Request, Response} from "express";
 import {app} from "../index";
-import {DocumentModel, UserModel} from "../database/dbSchemas";
+import {DocumentModel} from "../database/dbSchemas";
 import {checkDocument, createDocument} from "../protocol/Checks";
-import {Packet} from "../protocol/Packet";
-import {create} from "domain";
+import axios from "axios";
 
 app.post('/file/upload', (req: Request, res: Response) => {
     if (req.body.metadata) {
+        if (req.body.metadata.icon) {   //is document
+            //@TODO continue here
+            axios.get(`${process.env.FILE_UPLOAD_SERVICE_URL}/presigned/upload?`).then(resp => {
+               res.status(200);
+               res.send(resp);
+            }).catch(err => {
+                res.status(400);
+                res.send(err);
+            });
+        } else { //is icon
+
+        }
         //Metadata Verification/checks
         //Request Upload Link from File Upload Service
         //Forward pre-signed (PUT) link to frontend (DNS: file.upload.internal)
         //Upload Metadata to Database
         //Log Upload
     } else {
-        res.status(401);
+        res.status(400);
         res.send({
             error: true,
             msg: "Malformed request: Body missing!"
@@ -57,9 +68,9 @@ app.post('/file/bulk/download', (req: Request, res: Response) => {
 
 
 app.post('/file/bulk/upload', async (req: Request, res: Response) => {
-    if (req.body) {
+    if (req.body.list) {
         const documents = [];
-        for (let elem in req.body.list) {
+        for (const elem in req.body.list) {
             if (checkDocument(elem)) {
                 const doc = new DocumentModel(createDocument(elem));
                 documents.push(doc);
@@ -72,6 +83,10 @@ app.post('/file/bulk/upload', async (req: Request, res: Response) => {
                 });
                 res.end();
             }
+        }
+
+        for (const e of documents) {
+            await e.save();
         }
         // Metadata Verification/checks
         // Create thumbnail
