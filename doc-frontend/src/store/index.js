@@ -24,6 +24,23 @@ export default new Vuex.Store({
   actions: {
     login(context, auth) {
       return userHandler.login(context, auth);
+    },
+    register(context, user) {
+      return userHandler.register(user);
+    },
+    upload(context, config) {
+      return fileHandler.singleUpload(config.metadata, config.file);
+    },
+    download(context, config) {
+      return fileHandler.singleDownload(config);
+    },
+    /**
+     *
+     * @param config
+     * @returns {Promise<Object>}
+     */
+    modify(context, config) {
+      return fileHandler.modifyFile(config);
     }
   },
   modules: {

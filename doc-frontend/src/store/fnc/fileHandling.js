@@ -1,12 +1,22 @@
 import axios from 'axios';
 
+function configureUploadHook(cb) {
+  return {
+    onUploadProgress(progressEvent) {
+      let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+      if (cb) cb(percentCompleted);
+      return percentCompleted;
+    }
+  }
+}
+
 module.exports = {
-  singleUpload(metadata, file) {
+  singleUpload(metadata, file, onProgress) {
     return new Promise((resolve, reject) => {
       axios.post(process.env.SINGLE_UPLOAD_URL, metadata).then(res => {
         const formData = new FormData();
         formData.append('file', file);
-        axios.post(res.data.link, formData).then(resolve).catch(reject);
+        axios.post(res.data.link, formData, configureUploadHook(onProgress)).then(resolve).catch(reject);
       }).catch(err => reject(err));
     })
   },
@@ -26,13 +36,18 @@ module.exports = {
       })
     })
   },
-  //contains eTag or File name
-  singleDownload(config) {
+  //contains File name and eTag
+  singleDownload(file) {
     return new Promise((resolve, reject) => {
-      axios.post(process.env.SINGLE_FILE_DOWNLOAD, config).then(res => {
-        resolve(res.data.link);
-      }).catch(reject);
-    });
+      axios.get(process.env.SINGLE_FILE_DOWNLOAD+`?${ (file.etag) ? "etag="+file.etag : "name="+file.name}`, { responseType: 'blob' }).then(res => {
+        const fileURL = window.URL.createObjectURL(new Blob([res.data]));
+        const fileLink = document.createElement('a');
+        fileLink.href = fileURL;
+        fileLink.setAttribute('download', file.name);
+        document.body.appendChild(fileLink);
+        fileLink.click();
+      }).catch(reject)
+    })
   },
   //contains a list of config objects with either eTags or File names
   multipleDownload(list) {

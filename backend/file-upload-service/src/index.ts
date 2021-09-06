@@ -31,7 +31,7 @@ const upload = Multer({
     })
 });
 
-app.post("/uploadfile", upload.array("upload", 3), function (req, res) {
+app.post("/upload", upload.array("upload", 3), function (req, res) {
     // @ts-ignore
     res.send("Successfully uploaded " +req.files.length + " files!");
 });
