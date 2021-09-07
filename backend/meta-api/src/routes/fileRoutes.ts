@@ -4,6 +4,7 @@ import {DocumentModel} from "../database/dbSchemas";
 import {checkDocument, createDocument} from "../protocol/Checks";
 import axios from "axios";
 
+
 app.post('/file/upload', (req: Request, res: Response) => {
     if (req.body.metadata) {
         if (req.body.metadata.icon) {   //is document
@@ -103,10 +104,10 @@ app.post('/file/bulk/upload', async (req: Request, res: Response) => {
 });
 
 /**
- * Returns a list of file metadata
+ * Returns a list of file metadata for a user
  */
-app.get('/file/list', (req: Request, res: Response) => {
-    DocumentModel.find({"_id": false}, (err, data) => {
+app.get('/file/list:uid', (req: Request, res: Response) => {
+    DocumentModel.find({"_id": false, }, (err, data) => {
         if (err) {
             res.status(500);
             res.send({
