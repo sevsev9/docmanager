@@ -6,12 +6,20 @@ import './plugins/bootstrap-vue'
 import App from './App.vue'
 import store from './store'
 import router from './router'
+import axios from 'axios';
 
 Vue.config.productionTip = false
 dotenv.config();
+const axiosInstance = axios.create({
+  withCredentials: true,
+  baseURL: process.env.API_ENDPOINT_BASE_URL
+});
 
-new Vue({
+Vue.prototype.$axios = axiosInstance;
+
+
+const app = new Vue({
   store,
   router,
   render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');
