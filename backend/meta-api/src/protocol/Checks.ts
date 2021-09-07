@@ -1,4 +1,6 @@
 //@ts-nocheck
+import {Document, User} from "../database/dbTypes";
+
 export function checkDocument(doc: Object) {
     return typeof doc.name === "string" &&
         typeof doc.tags === "object" && doc.tags.length > 0 &&
@@ -24,4 +26,8 @@ export function createDocument(doc: Object) {
         thumbnail_etag: doc.thumbnail_etag,
         from: date
     });
+}
+
+export function createUser(usr: Object) {
+    //@Todo
 }
