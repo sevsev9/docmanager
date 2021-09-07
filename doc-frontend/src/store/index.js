@@ -7,9 +7,9 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    upload_queue: [],
-    user: {},
-    loggedin: false
+    upload_queue: [], //files to be uploaded
+    user: {}, //user in the current session - if empty user is not logged in
+    fileMetadata: []  //contains cached metadata of files which can at least be read by the user
   },
   mutations: {
     login (state, user) {
@@ -18,7 +18,8 @@ export default new Vuex.Store({
     },
     logout (state) {
       state.user = {};
-      state.loggedin = false;
+      state.upload_queue = [];
+      state.fileMetadata = [];
     }
   },
   actions: {
@@ -36,11 +37,18 @@ export default new Vuex.Store({
     },
     /**
      *
-     * @param config
+     * @param context [ignore] Context given by vuex.
+     * @param config Config @Todo to be defined
      * @returns {Promise<Object>}
      */
     modify(context, config) {
       return fileHandler.modifyFile(config);
+    },
+    delete(context, config) {
+      return fileHandler.deleteFile(config);
+    },
+    logout(context) {
+      context.commit('logout');
     }
   },
   modules: {
