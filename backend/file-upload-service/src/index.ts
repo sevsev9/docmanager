@@ -36,6 +36,8 @@ app.post("/upload", upload.array("upload", 3), function (req, res) {
     res.send("Successfully uploaded " +req.files.length + " files!");
 });
 
+//@TODO configure nginx ingress controller to change request headers according to (this)[https://stackoverflow.com/questions/64815229/nginx-controller-kubernetes-need-to-change-host-header-within-ingress] link.
+// nginx-ingress controller required for presigned urls with docker image
 app.get('/presigned/*', (req, res) => {
     minioClient.presignedUrl(
         (req.originalUrl.includes("upload")) ? "POST" : "GET", process.env.MINIO_BUCKET!,
