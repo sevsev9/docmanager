@@ -1,19 +1,42 @@
-import {Request, Response, NextFunction} from "express";
+import {Request, Response} from "express";
 import {app} from "../index";
-
-// Reserved for future use
-//     ________  __    __  ________  __    __  _______   ________              __    __   ______   ________
-//    /        |/  |  /  |/        |/  |  /  |/       \ /        |            /  |  /  | /      \ /        |
-//    $$$$$$$$/ $$ |  $$ |$$$$$$$$/ $$ |  $$ |$$$$$$$  |$$$$$$$$/             $$ |  $$ |/$$$$$$  |$$$$$$$$/
-//    $$ |__    $$ |  $$ |   $$ |   $$ |  $$ |$$ |__$$ |$$ |__                $$ |  $$ |$$ \__$$/ $$ |__
-//    $$    |   $$ |  $$ |   $$ |   $$ |  $$ |$$    $$< $$    |               $$ |  $$ |$$      \ $$    |
-//    $$$$$/    $$ |  $$ |   $$ |   $$ |  $$ |$$$$$$$  |$$$$$/                $$ |  $$ | $$$$$$  |$$$$$/
-//    $$ |      $$ \__$$ |   $$ |   $$ \__$$ |$$ |  $$ |$$ |_____             $$ \__$$ |/  \__$$ |$$ |_____
-//    $$ |      $$    $$/    $$ |   $$    $$/ $$ |  $$ |$$       |            $$    $$/ $$    $$/ $$       |
-//    $$/        $$$$$$/     $$/     $$$$$$/  $$/   $$/ $$$$$$$$/              $$$$$$/   $$$$$$/  $$$$$$$$/
+import {register, login} from "../database/dbUtil";
 
 // Register
 // Login
 // Session check middleware
 // Profile Links
 // Files associated with the user
+
+app.post('/user/*', (req, res, next) => {
+  if (!req.body.data.user || !req.body.data.auth) {
+    res.status(400);
+    res.send({
+      error: true,
+      msg: "Malformed request! No valid body included."
+    });
+    res.end();
+  }
+  next();
+})
+
+app.post('/user/register', (req: Request, res: Response) => {
+  register(createUser(req.body.data.user)).then( (data:any) => {
+    res.status(200);
+    res.send({
+      err: false,
+      data
+    });
+    res.end();
+  }).catch( (err: Error) => {
+    res.status(400);
+    res.send({
+      err: true,
+      msg: err
+    })
+  });
+});
+
+app.post('/user/login', (req: Request, res: Response) => {
+
+});
