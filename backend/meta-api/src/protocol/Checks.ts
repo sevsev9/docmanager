@@ -29,5 +29,12 @@ export function createDocument(doc: Object) {
 }
 
 export function createUser(usr: Object) {
-    //@Todo
+    return new User({
+        username: usr.username,
+        password: usr.password,
+        email: usr.email,
+        nickname: usr.nickname,
+        registration_date: Date.now(),  //today, now
+        permissions: usr.permissions
+    })
 }
