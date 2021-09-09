@@ -1,6 +1,7 @@
 import {Request, Response} from "express";
 import {app} from "../index";
 import {register, login} from "../database/dbUtil";
+import {createUser} from "../protocol/Checks";
 
 // Register
 // Login
@@ -38,5 +39,41 @@ app.post('/user/register', (req: Request, res: Response) => {
 });
 
 app.post('/user/login', (req: Request, res: Response) => {
-
+  const auth = req.body.data.auth;
+  if (auth && auth.password && (auth.username || auth.email)) {
+    if (auth.username) {
+      login(auth.password, auth.username).then(r => {
+        res.status(200);
+        res.send(r);
+        res.end();
+      }).catch(err => {
+        res.status(400);
+        res.send({
+          error: true,
+          msg: err
+        });
+        res.end();
+      });
+    } else {
+      login(auth.password, undefined, auth.email).then(r => {
+        res.status(200);
+        res.send(r);
+        res.end();
+      }).catch(err => {
+        res.status(400);
+        res.send({
+          error: true,
+          msg: err
+        });
+        res.end();
+      });
+    }
+  } else {
+    res.status(400);
+    res.send({
+      error: true,
+      msg: "Malformed login body!"
+    });
+    res.end();
+  }
 });
