@@ -77,3 +77,7 @@ app.post('/user/login', (req: Request, res: Response) => {
     res.end();
   }
 });
+
+app.get('/user/logout', (req, res) => {
+
+});
