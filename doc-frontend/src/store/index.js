@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import fileHandler from './fnc/fileHandling';
 import userHandler from './fnc/userHandling';
+import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex);
 
@@ -12,11 +13,11 @@ export default new Vuex.Store({
     fileMetadata: []  //contains cached metadata of files which can at least be read by the user
   },
   mutations: {
-    login (state, user) {
+    login(state, user) {
       state.user = user
       state.loggedin = true;
     },
-    logout (state) {
+    logout(state) {
       state.user = {};
       state.upload_queue = [];
       state.fileMetadata = [];
@@ -51,7 +52,6 @@ export default new Vuex.Store({
       context.commit('logout');
     }
   },
-  modules: {
-
-  }
+  modules: {},
+  plugins: [createPersistedState()]
 })

@@ -26,6 +26,9 @@ module.exports = {
       }).catch(reject);
     })
   },
+  oAuthLoginGoogle(context, auth) {
+
+  },
   delete() {  //delete user profile
     return axios.post(process.env.USER_DELETE);
   },
