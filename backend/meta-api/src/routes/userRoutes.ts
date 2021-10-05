@@ -22,15 +22,15 @@ app.post('/user/*', (req, res, next) => {
   }
 })
 
-app.post('/user/register', (req: Request, res: Response) => {
-  register(createUser(req.body.data.user)).then( (data:any) => {
+app.post('/register', (req: Request, res: Response) => {
+  register(createUser(req.body.data.user)).then((data: any) => {
     res.status(200);
     res.send({
       err: false,
       data
     });
     res.end();
-  }).catch( (err: Error) => {
+  }).catch((err: Error) => {
     res.status(400);
     res.send({
       err: true,
@@ -39,7 +39,7 @@ app.post('/user/register', (req: Request, res: Response) => {
   });
 });
 
-app.post('/user/login', (req: Request, res: Response) => {
+app.post('/login', (req: Request, res: Response) => {
   const auth = req.body.data.auth;
   if (auth && auth.password && (auth.username || auth.email)) {
     if (auth.username) {
@@ -82,36 +82,22 @@ app.post('/user/login', (req: Request, res: Response) => {
 });
 
 app.get('/user/logout', (req, res) => {
-  if (req.session.user) {
-    req.session.user = undefined;
-    req.session.destroy((err) => {
-      if (err) {
-        console.log(err);
-        res.status(500);
-        res.send({
-          err: true,
-          msg: "Error occurred during logout.",
-          errmsg: err
-        })
-      } else {
-        res.status(200);
-        res.send({
-          err: false,
-          msg: "Successfully logged out."
-        })
-      }
-    })
-  } else {
-    req.session.destroy((err) => {
-      if (err) {
-        console.log(err);
-      }
+  req.session.user = undefined;
+  req.session.destroy((err) => {
+    if (err) {
+      console.log(err);
+      res.status(500);
+      res.send({
+        err: true,
+        msg: "Error occurred during logout.",
+        errmsg: err
+      })
+    } else {
       res.status(200);
       res.send({
         err: false,
-        msg: "Not logged in."
-      });
-      res.end();
-    })
-  }
+        msg: "Successfully logged out."
+      })
+    }
+  })
 });
