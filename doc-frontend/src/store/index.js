@@ -44,7 +44,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         bcrypt.genSalt(10, undefined,salt => {
           bcrypt.hash(data.password, salt, hash => {
-            axios.post(API_ADDRESS + "/user/login", {
+            axios.post(API_ADDRESS + "/login", {
               auth: data.auth,
               password: hash
             }).then(res => {
@@ -69,7 +69,7 @@ export default new Vuex.Store({
      * @param data
      */
     register(context, data) {
-      return axios.get(API_ADDRESS + "/user/register", data);
+      return axios.get(API_ADDRESS + "/register", data);
     },
     /**
      * Returns a promise which will eventually return message to be displayed to the user.
@@ -78,7 +78,7 @@ export default new Vuex.Store({
      */
     logout(state) {
       return new Promise((resolve, reject) => {
-        axios.get(API_ADDRESS+"/user/logout").then(res => {
+        axios.get(API_ADDRESS+"/logout").then(res => {
           state.user = {};
           state.loggedin = false;
           resolve(res.data.msg);
