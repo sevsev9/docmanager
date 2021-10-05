@@ -2,10 +2,18 @@ import express from "express";
 import dotenv from "dotenv";
 import {dbConnect} from "./database/dbUtil";
 import session from "express-session";
+import {User} from "./database/dbTypes";
 
 const oneDay = 1000 * 60 * 60 * 24;
 
 dotenv.config();
+
+declare module "express-session" {
+  interface SessionData {
+    user: User,
+    views: number
+  }
+}
 
 export const app = express();
 app.use(express.json());

@@ -1,56 +1,96 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import fileHandler from './fnc/fileHandling';
-import userHandler from './fnc/userHandling';
-import createPersistedState from 'vuex-persistedstate';
+import axios from "axios";
+import bcrypt from "bcrypt";
+import createPersistedState from "vuex-persistedstate";
 
-Vue.use(Vuex);
+Vue.use(Vuex)
+
+const API_ADDRESS = "localhost:8080";
 
 export default new Vuex.Store({
   state: {
-    upload_queue: [], //files to be uploaded
-    user: {}, //user in the current session - if empty user is not logged in
-    fileMetadata: []  //contains cached metadata of files which can at least be read by the user
+    user: {},
+    upload_queue: [],
+    loggedin: false
   },
   mutations: {
-    login(state, user) {
-      state.user = user
+    login(state, user) {  //is called after successful login
+      state.user = user;
       state.loggedin = true;
+      //@Todo implement auto logout?
     },
-    logout(state) {
+    logout(state) { //is called when the user presses "Log out" option in user menu
       state.user = {};
-      state.upload_queue = [];
-      state.fileMetadata = [];
+      state.loggedin = false;
+    },
+    /**
+     * Adds a file to the upload queue.
+     * @param state The current vuex state.
+     * @param file Has to be of Format: interface <tt>Document</tt> as seen in meta-api
+     */
+    addFile(state, file) {
+      state.upload_queue.push(file);
     }
   },
   actions: {
-    login(context, auth) {
-      return userHandler.login(context, auth);
-    },
-    register(context, user) {
-      return userHandler.register(user);
-    },
-    upload(context, config) {
-      return fileHandler.singleUpload(config.metadata, config.file);
-    },
-    download(context, config) {
-      return fileHandler.singleDownload(config);
+    /**
+     * Takes user/password or email/password and sends it to the backend.
+     * @param context
+     * @param data
+     * @returns {Promise<unknown>}
+     */
+    login(context, data) {
+      return new Promise((resolve, reject) => {
+        bcrypt.genSalt(10, undefined,salt => {
+          bcrypt.hash(data.password, salt, hash => {
+            axios.post(API_ADDRESS + "/user/login", {
+              auth: data.auth,
+              password: hash
+            }).then(res => {
+              context.commit('login', res.data.user);
+              resolve("Successfully logged in");
+            }).catch(err => {
+              if (err.response.statusCode === 403) {
+                reject("Wrong username or password");
+              } else if (err.response.statusCode === 500) {
+                reject("Our API is experiencing problems, we are currently looking into it.");
+              } else {
+                console.log(err);
+              }
+            });
+          })
+        })
+      })
     },
     /**
-     *
-     * @param context [ignore] Context given by vuex.
-     * @param config Config @Todo to be defined
-     * @returns {Promise<Object>}
+     * Takes a user and sends it for registration to the backend.
+     * @param context
+     * @param data
      */
-    modify(context, config) {
-      return fileHandler.modifyFile(config);
+    register(context, data) {
+      return axios.get(API_ADDRESS + "/user/register", data);
     },
-    delete(context, config) {
-      return fileHandler.deleteFile(config);
+    /**
+     * Returns a promise which will eventually return message to be displayed to the user.
+     * @param state
+     * @returns {Promise<String>}
+     */
+    logout(state) {
+      return new Promise((resolve, reject) => {
+        axios.get(API_ADDRESS+"/user/logout").then(res => {
+          state.user = {};
+          state.loggedin = false;
+          resolve(res.data.msg);
+        }).catch(err => {
+          reject(err);
+        });
+      });
     },
-    logout(context) {
-      context.commit('logout');
-    }
+    oauthLogin(state, data) {
+      console.log(state, data);
+    },
+
   },
   modules: {},
   plugins: [createPersistedState()]

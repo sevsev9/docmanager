@@ -28,7 +28,7 @@ export function register(usr: User) {
 }
 
 export function login(password: String, username?: String, email?: String) {
-  return new Promise((resolve, reject) => {// @ts-ignore
+  return new Promise<User>((resolve, reject) => {// @ts-ignore
     UserModel.find({$or: {username: username, email: email}, password: password}, (err, data) => {
       if (err) {
         reject(err);
