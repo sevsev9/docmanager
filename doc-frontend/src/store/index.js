@@ -92,6 +92,14 @@ export default new Vuex.Store({
     },
 
   },
+  getters: {
+    loggedIn: state => {
+      return state.loggedin;
+    },
+    isAdmin: state => {
+      return state.user.isAdmin;
+    }
+  },
   modules: {},
   plugins: [createPersistedState()]
 })
