@@ -2,31 +2,7 @@
   <div>
     <div>
       <h1>Register</h1>
-      <hr style="background-color: #646464; height: 1px; width: 25%">
       <b-form class="register" @submit="register" @reset="formReset">
-        <b-form-group
-            id="register-names"
-            label="Please insert your Name"
-            style="text-align: left"
-        >
-          <label for="register-fname-input">First Name:</label>
-          <b-form-input
-              type="text"
-              v-model="form.fname"
-              placeholder="Max"
-              id="register-fname-input"
-          >
-          </b-form-input>
-          <br>
-          <label for="register-lname-input">Last Name:</label>
-          <b-form-input
-              type="text"
-              v-model="form.lname"
-              placeholder="Mustermann"
-              id="register-lname-input"
-          >
-          </b-form-input>
-        </b-form-group>
         <hr style="background-color: #646464; height: 1px;">
         <b-form-group
             id="register-auth-info"
