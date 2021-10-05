@@ -19,9 +19,8 @@ const dbDocument = new Schema<Document>({
 });
 
 const dbUser = new Schema<User>({
-    username: {type: String,required: true, unique: true},
+    email: {type: String, required: true, unique: true},    //Primary Identifier
     password: {type: String, required: true}, //sha512 encoded
-    email: {type: String, required: true, unique: true},
     nickname: {type: String, required: true},
     registration_date: {type: Date, required: true},
     permissions: {type: Number, required: false, default: 0} // 0 -> normal user | 1 -> admin user | following are reserved

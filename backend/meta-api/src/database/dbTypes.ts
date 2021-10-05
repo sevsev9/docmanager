@@ -16,9 +16,8 @@ export interface Document {
 }
 
 export interface User {
-  username: String,
+  email: String, //Primary Identifier
   password: String, //sha512 encoded
-  email: String,
   nickname: String,
   registration_date: Date,
   permissions: Number //
