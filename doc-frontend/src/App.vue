@@ -4,17 +4,16 @@
       <router-link to="/">Home</router-link>
       |
       <router-link to="/about">About</router-link>
-    </div>
-    <div class="user-dropdown">
+
       <b-dropdown id="user-dropdown" :text="($store.getters.loggedIn) ? 'Hello' + $store.getters.userName : 'Login'"
                   variant="primary" class="m-2" right>
         <div v-if="$store.getters.loggedIn">
-          <b-dropdown-item href="/login">Login</b-dropdown-item>
-          <b-dropdown-item href="/register">Register</b-dropdown-item>
-        </div>
-        <div v-else>
           <b-dropdown-item href="/profile">Profile</b-dropdown-item>
           <b-dropdown-item href="/dashboard">Dashboard</b-dropdown-item>
+        </div>
+        <div v-else>
+          <b-dropdown-item href="/login">Login</b-dropdown-item>
+          <b-dropdown-item href="/register">Register</b-dropdown-item>
         </div>
       </b-dropdown>
     </div>
@@ -33,6 +32,7 @@
 
 #nav {
   padding: 30px;
+  width: 100%;
 }
 
 #nav a {
@@ -44,13 +44,9 @@
   color: #42b983;
 }
 
-.user-dropdown {
-  top: 0;
-  width: 100%;
-  position: absolute;
-}
-
 #user-dropdown {
-  float: right;
+  right: 0;
+  top: 15px;
+  position: absolute;
 }
 </style>
