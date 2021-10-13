@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from "axios";
-import bcrypt from "bcrypt";
-import createPersistedState from "vuex-persistedstate";
+import bcrypt from "bcryptjs";
 
 Vue.use(Vuex)
 
@@ -98,8 +97,10 @@ export default new Vuex.Store({
     },
     isAdmin: state => {
       return state.user.isAdmin;
+    },
+    userName: state => {
+      return state.user.name
     }
   },
-  modules: {},
-  plugins: [createPersistedState()]
+  modules: {}
 })

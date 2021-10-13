@@ -5,6 +5,7 @@ import store from '../store/index'
 import Login from "@/views/Login";
 import Register from "@/views/Register";
 import Profile from "@/views/Profile";
+import Dashboard from "@/views/Dashboard";
 
 Vue.use(VueRouter)
 
@@ -46,6 +47,15 @@ const routes = [
     get component() {
       if (store.getters.loggedIn) {
         return Profile;
+      } else return Login;
+    }
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    get component() {
+      if (store.getters.loggedIn) {
+        return Dashboard;
       } else return Login;
     }
   }
