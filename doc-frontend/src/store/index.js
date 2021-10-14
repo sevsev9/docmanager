@@ -6,7 +6,7 @@ import createPersistedState from "vuex-persistedstate"
 
 Vue.use(Vuex)
 
-const API_ADDRESS = "localhost:8080";
+const API_ADDRESS = "localhost:3000";
 
 export default new Vuex.Store({
   state: {
