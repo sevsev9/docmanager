@@ -1,6 +1,7 @@
 import {connect} from "mongoose";
-import {User} from "./dbTypes";
+import {IUser, User} from "./dbTypes";
 import {UserModel} from "./dbSchemas";
+import bcrypt from "bcryptjs";
 
 export function dbConnect(host: String, port: Number | String, authDatabase: String, username: String, password: String) {
     return new Promise<string>(async (resolve, reject) => {
@@ -21,18 +22,39 @@ export function dbConnect(host: String, port: Number | String, authDatabase: Str
  * Creates a new user and returns a promise when the user has been created.
  * @param usr Data of the user to be created.
  */
-export function register(usr: User) {
+export function register(usr: IUser) {
     const user = new UserModel(usr);
     return user.save();
 }
 
-export function login(password: String, email?: String) {
-    return new Promise<User>((resolve, reject) => {// @ts-ignore
-        UserModel.find({email: email, password: password}, (err, data) => {
+export function login(password: string, email?: string) {
+    return new Promise<IUser>((resolve, reject) => {// @ts-ignore
+
+        UserModel.find({email: email}, (err, data) => {
+
+            console.log(data[0]);
             if (err) {
                 reject(err);
+            } else if (data.length > 0) {
+                bcrypt.compare(password, data[0].password).then((res: any) => {
+                    console.log("bcrypt res: ", res);
+                    if (res) {
+                        resolve(new User(
+                            data[0].email,
+                            "",
+                            data[0].permissions,
+                            data[0].registration_date,
+                            data[0].nickname!
+                        ));
+                    } else {
+                        reject("Authentication invalid!");
+                    }
+                }).catch((err: any) => {
+                    console.log(err);
+                    reject(err);
+                })
             } else {
-                resolve(data[0]);
+                reject("User not found with these credentials.") //returns undefined if user is not in database
             }
         })
     })

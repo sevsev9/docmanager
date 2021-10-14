@@ -25,6 +25,7 @@
     "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",

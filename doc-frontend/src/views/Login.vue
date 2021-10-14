@@ -36,6 +36,8 @@
 </template>
 
 <script>
+import router from "@/router"
+
 export default {
   name: "Login",
   data: () => {
@@ -52,7 +54,8 @@ export default {
       e.preventDefault();
       this.$store.dispatch('login', {
         email: this.form.email,
-        password: this.form.password
+        password: this.form.password,
+        router
       });
     },
     formReset(e) {

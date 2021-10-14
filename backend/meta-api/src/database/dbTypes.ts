@@ -1,26 +1,89 @@
-export interface Document {
-  name: String,
+export interface IDocument {
+  name: string,
   type: Object,
-  eTag: String,
+  eTag: string,
   size: Number, // number of the filesize in kB
-  tags: Array<String>,
-  category: String,
-  description: String,
+  tags: Array<string>,
+  category: string,
+  description: string,
   upload_date: Date,
   access: Array<Object>,
   //Optionals
-  thumbnail_etag?: String, //if empty -> default thumbnail will be used
-  content?: String,  //contains some sort of document contend, can be html formatted
+  thumbnail_etag?: string, //if empty -> default thumbnail will be used
+  content?: string,  //contains some sort of document contend, can be html formatted
   from?: Date  //when the document was issued or received by the user
   additional_info?: Object
 }
 
-export interface User {
-  email: String, //Primary Identifier
-  password: String, //sha512 encoded
-  nickname: String,
-  registration_date: Date,
-  permissions: Number //
+export class Document implements IDocument{
+  name: string;
+  type: Object;
+  eTag: string;
+  size: Number;
+  tags: Array<string>;
+  category: string;
+  description: string;
+  upload_date: Date;
+  access: Array<Object>;
+
+  additional_info?: Object;
+  content?: string;
+  from?: Date;
+  thumbnail_etag?: string;
+
+  constructor(
+      name: string,
+      type: Object,
+      eTag: string,
+      size: Number,
+      tags: Array<string>,
+      category: string,
+      description: string,
+      upload_date: Date,
+      access: Array<Object>,
+      additional_info?: Object,
+      content?: string,
+      from?: Date,
+      thumbnail_etag?: string
+  ) {
+    this.name = name;
+    this.type = type;
+    this.eTag = eTag;
+    this.size = size;
+    this.tags = tags;
+    this.category = category;
+    this.description = description;
+    this.upload_date = upload_date;
+    this.access = access;
+    this.additional_info = (additional_info) ? additional_info : "";
+    this.content = (content) ? content : "";
+    this.from = (from) ? from : new Date(Date.now());
+    this.thumbnail_etag = (thumbnail_etag) ? thumbnail_etag : "";
+  }
+}
+
+export interface IUser {
+  email: string, //Primary Identifier
+  password: string, //sha512 encoded
+  registration_date: Number,
+  permissions: Number,
+  nickname?: string
+}
+
+export class User implements IUser {
+  email: string;
+  password: string;
+  permissions: Number;
+  registration_date: Number;
+  nickname?: string;
+
+  constructor(email: string, password: string, permissions: Number, registration_date: Number, nickname: string) {
+    this.email = email;
+    this.password = password;
+    this.permissions = permissions;
+    this.registration_date = registration_date;
+    this.nickname = nickname;
+  }
 }
 
 export enum CATEGORIES {
@@ -42,9 +105,9 @@ export enum Permissions {
 
 /**
  * Calculates the integer from given permission(s). Operates as a bitset.
- * @param list A String Array containing one or multiple permissions.
+ * @param list A string Array containing one or multiple permissions.
  */
-export function getPermissions(list: Array<String>) {
+export function getPermissions(list: Array<string>) {
   //@Todo
 }
 

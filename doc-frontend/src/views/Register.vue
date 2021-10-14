@@ -10,6 +10,14 @@
             description="We will not share this information with anyone else."
             style="text-align: left"
         >
+          <label for="register-nick-input">Nickname: (optional)</label>
+          <b-form-input
+              id="register-nick-input"
+              v-model="form.nickname"
+              type="text"
+              placeholder="Maxi1234"
+          ></b-form-input>
+          <br>
           <label for="register-email-input">E-Mail:</label>
           <b-form-input
               id="register-email-input"
@@ -56,13 +64,14 @@
 </template>
 
 <script>
+import router from "@/router";
+
 export default {
   name: "Register",
   data: () => {
     return {
       form: {
-        fname: "",
-        lname: "",
+        nickname: "",
         email: "",
         password: "",
         repeat_password: ""
@@ -73,12 +82,12 @@ export default {
   methods: {
     register(e) {
       e.preventDefault();
-      this.loading = true;
       this.$store.dispatch('register', {
         fname: this.form.fname,
         lname: this.form.lname,
         email: this.form.email,
-        password: this.form.password
+        password: this.form.password,
+        router
       });
     },
     formReset(e) {

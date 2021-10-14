@@ -5,11 +5,12 @@
       |
       <router-link to="/about">About</router-link>
 
-      <b-dropdown id="user-dropdown" :text="($store.getters.loggedIn) ? 'Hello' + $store.getters.userName : 'Login'"
+      <b-dropdown id="user-dropdown" :text="($store.getters.loggedIn) ? 'Hello ' + $store.getters.userName : 'Login'"
                   variant="primary" class="m-2" right>
         <div v-if="$store.getters.loggedIn">
           <b-dropdown-item href="/profile">Profile</b-dropdown-item>
           <b-dropdown-item href="/dashboard">Dashboard</b-dropdown-item>
+          <b-dropdown-item @click="$store.dispatch('logout', $router)">Logout</b-dropdown-item>
         </div>
         <div v-else>
           <b-dropdown-item href="/login">Login</b-dropdown-item>

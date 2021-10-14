@@ -1,8 +1,8 @@
 //@ts-nocheck
 import {model, Schema} from "mongoose";
-import {Document, User} from "./dbTypes";
+import {IDocument, IUser} from "./dbTypes";
 
-const dbDocument = new Schema<Document>({
+const dbDocument = new Schema<IDocument>({
     name: {type: String, required: true, unique: true},
     type: {type: Object, required: true},
     etag: {type: String, required: true, unique: true},
@@ -18,13 +18,13 @@ const dbDocument = new Schema<Document>({
     additional_info: {type: Object, required: false},
 });
 
-const dbUser = new Schema<User>({
+const dbUser = new Schema<IUser>({
     email: {type: String, required: true, unique: true},    //Primary Identifier
     password: {type: String, required: true}, //sha512 encoded
-    nickname: {type: String, required: true},
-    registration_date: {type: Date, required: true},
+    nickname: {type: String, required: false},
+    registration_date: {type: Number, required: true},
     permissions: {type: Number, required: false, default: 0} // 0 -> normal user | 1 -> admin user | following are reserved
 });
 
-export let UserModel = model<User>('User',dbUser);
-export let DocumentModel = model<Document>('Document', dbDocument);
+export let UserModel = model<IUser>('User',dbUser);
+export let DocumentModel = model<IDocument>('Document', dbDocument);
