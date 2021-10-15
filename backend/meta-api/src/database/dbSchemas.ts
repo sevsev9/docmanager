@@ -3,7 +3,7 @@ import {model, Schema} from "mongoose";
 import {IDocument, IUser} from "./dbTypes";
 
 const dbDocument = new Schema<IDocument>({
-    name: {type: String, required: true, unique: true},
+    name: {type: String, required: true, unique: true, index: true},
     type: {type: Object, required: true},
     etag: {type: String, required: true, unique: true},
     tags: {type: Array, required: true},
@@ -19,7 +19,7 @@ const dbDocument = new Schema<IDocument>({
 });
 
 const dbUser = new Schema<IUser>({
-    email: {type: String, required: true, unique: true},    //Primary Identifier
+    email: {type: String, required: true, unique: true, index: true},    //Primary Identifier
     password: {type: String, required: true}, //sha512 encoded
     nickname: {type: String, required: false},
     registration_date: {type: Number, required: true},
