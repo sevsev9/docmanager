@@ -99,11 +99,11 @@ export default new Vuex.Store({
         logout(context, router) {
             return new Promise((resolve, reject) => {
                 axios.get(API_ADDRESS + "/user/logout").then(res => {
-                    context.user = {};
-                    context.loggedIn = false;
-                    alert("Successfully logged out");
-                    console.log(res);
-                    router.push("/");
+                    context.commit('logout');
+                    alert(res.data.msg);
+                    if (router.history.current.path !== "/") {
+                        router.push("/");
+                    }
                 }).catch(err => {
                     reject(err);
                 });
