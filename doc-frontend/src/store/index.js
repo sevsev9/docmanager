@@ -123,6 +123,9 @@ export default new Vuex.Store({
         },
         userName: state => {
             return (state.user.nickname !== "" && state.user.nickname !== undefined) ? state.user.nickname : "User";
+        },
+        email: state => {
+            return state.user.email;
         }
     },
     modules: {},
