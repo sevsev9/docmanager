@@ -83,8 +83,7 @@ export default {
     register(e) {
       e.preventDefault();
       this.$store.dispatch('register', {
-        fname: this.form.fname,
-        lname: this.form.lname,
+        nickname: this.form.nickname,
         email: this.form.email,
         password: this.form.password,
         router
