@@ -114,7 +114,8 @@ export default new Vuex.Store({
 
 
                 //Check if user is already registered with google oauth in the database
-                axios.post('/oauth/signin/google', {
+                axios.post('/user/oauth/check/google', {
+                    email: g.getBasicProfile().Ot,
                     access_token: g.getAuthResponse().access_token
                 }).then(res => {
                     console.log(res);

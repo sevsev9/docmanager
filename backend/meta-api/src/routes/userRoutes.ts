@@ -103,7 +103,7 @@ router.get('/logout', (req, res) => {
   }
 });
 
-router.get('/oauth/check', (req, res) => {
+router.get('/oauth/check/google', (req, res) => {
   if (req.session.user) {
     clearSession(req, undefined);
   }
