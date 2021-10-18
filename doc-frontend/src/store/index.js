@@ -41,25 +41,23 @@ export default new Vuex.Store({
          * @returns {Promise<unknown>}
          */
         login(context, data) {
-            return new Promise((resolve, reject) => {
-                axios.post(API_ADDRESS + "/user/login", {
-                    email: data.email,
-                    password: data.password
-                }).then(res => {
-                    if (res.data.email) {
-                        context.commit('login', res.data);
-                        data.router.push("/user/dashboard");
-                    }
-                }).catch(err => {
-                    if (err.response.statusCode === 403) {
-                        reject("Wrong username or password");
-                    } else if (err.response.statusCode === 500) {
-                        reject("Our API is experiencing problems, we are currently looking into it.");
-                    } else {
-                        console.log(err);
-                    }
-                });
-            })
+            axios.post(API_ADDRESS + "/user/login", {
+                email: data.email,
+                password: data.password
+            }).then(res => {
+                if (res.data.email) {
+                    context.commit('login', res.data);
+                    data.router.push("/user/dashboard");
+                }
+            }).catch(err => {
+                if (err.response.statusCode === 403) {
+                    alert("Wrong username or password");
+                } else if (err.response.statusCode === 500) {
+                    alert("Our API is experiencing problems, we are currently looking into it.");
+                } else {
+                    console.log(err);
+                }
+            });
         },
         /**
          * Takes a user and sends it for registration to the backend.
@@ -67,28 +65,24 @@ export default new Vuex.Store({
          * @param data Registration data in the form of: see README ##registration
          */
         register(context, data) {
-            return new Promise((resolve, reject) => {
-                bcrypt.genSalt(10, (err, salt) => {
-                    bcrypt.hash(data.password, salt, (err, hash) => {
-                        axios.post(API_ADDRESS + "/user/register", {
-                            nickname: data.nickname,
-                            email: data.email,
-                            password: hash
-                        }).then(res => {
-                            if (!res.data.err) {
-                                data.router.push("/login").then(resolve);
-                            } else {
-                                console.log(res.data.err)
-                            }
-                        }).catch(err => {
-                            console.log(err);
-                            alert(err);
-                            reject(err);
-                        });
-                    })
+            bcrypt.genSalt(10, (err, salt) => {
+                bcrypt.hash(data.password, salt, (err, hash) => {
+                    axios.post(API_ADDRESS + "/user/register", {
+                        nickname: data.nickname,
+                        email: data.email,
+                        password: hash
+                    }).then(res => {
+                        if (!res.data.err) {
+                            data.router.push("/login")
+                        } else {
+                            console.log(res.data.err)
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                        alert(err);
+                    });
                 })
-
-            });
+            })
         },
         /**
          * Returns a promise which will eventually return message to be displayed to the user.
@@ -97,16 +91,14 @@ export default new Vuex.Store({
          * @returns {Promise<String>}
          */
         logout(context, router) {
-            return new Promise((resolve, reject) => {
-                axios.get(API_ADDRESS + "/user/logout").then(res => {
-                    context.user = {};
-                    context.loggedIn = false;
-                    alert("Successfully logged out");
-                    console.log(res);
-                    router.push("/");
-                }).catch(err => {
-                    reject(err);
-                });
+            context.commit("logout");
+            axios.get(API_ADDRESS + "/user/logout").then(res => {
+                alert("Successfully logged out");
+                console.log(res);
+                router.push("/");
+            }).catch(err => {
+                console.log(err);
+                alert("Could not talk to server");
             });
         },
         oauthLogin(state, data) {
