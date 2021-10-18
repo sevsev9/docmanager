@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-button v-b-toggle.dashboard-sidebar>Toggle Sidebar</b-button>
+    <b-button v-b-toggle.dashboard-sidebar style="position: absolute; top: 2em; left: 2em">Toggle Sidebar</b-button>
     <b-sidebar id="dashboard-sidebar" title="Sidebar" shadow bg-variant="dark" text-variant="light">
       <div class="px-3 py-2">
         <p>
