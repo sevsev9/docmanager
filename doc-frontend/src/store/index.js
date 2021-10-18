@@ -12,7 +12,8 @@ export default new Vuex.Store({
     state: {
         user: {},
         upload_queue: [],
-        loggedIn: false
+        loggedIn: false,
+        oauthCache: {}
     },
     mutations: {
         login(state, user) {  //is called after successful login
@@ -31,6 +32,9 @@ export default new Vuex.Store({
          */
         addFile(state, file) {
             state.upload_queue.push(file);
+        },
+        cache(state, data) {
+            state.oauthCache = data;
         }
     },
     actions: {
@@ -88,7 +92,6 @@ export default new Vuex.Store({
          * Returns a promise which will eventually return message to be displayed to the user.
          * @param context
          * @param router Vue Router Reference
-         * @returns {Promise<String>}
          */
         logout(context, router) {
             context.commit("logout");
@@ -101,8 +104,28 @@ export default new Vuex.Store({
                 alert("Could not talk to server");
             });
         },
-        oauthLogin(state, data) {
-            console.log(state, data);
+        async oAuthLogin(context, data) {
+            if (data.provider === "google") {
+                const g = await data.service.signIn();
+
+
+                //Check if user is already registered with google oauth in the database
+                axios.post('/oauth/signin/google', {
+                    access_token: g.getAuthResponse().access_token
+                }).then(res => {
+                    console.log(res);
+                    if (res.data.loggedIn) { //the user exists in the database and has been logged in
+                        context.commit('login',data.user);  //Login the user
+                    } else if (res.data.createFirst) { //Register the user with google oauth
+                        context.commit('cache',{
+                            email: g.getBasicProfile().Ot,
+                            nickname: g.getBasicProfile().Se
+                        });
+                        data.router.push("/create/profile");    //let the user customize their profile
+                    }
+                })
+
+            }
         },
 
     },
@@ -115,6 +138,9 @@ export default new Vuex.Store({
         },
         userName: state => {
             return (state.user.nickname !== "" && state.user.nickname !== undefined) ? state.user.nickname : "User";
+        },
+        oAuthCache: state => {
+            return state.oauthCache;
         }
     },
     modules: {},

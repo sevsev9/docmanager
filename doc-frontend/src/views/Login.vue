@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <h1>Login</h1>
-    <b-form class="login" @submit="login" @reset="formReset">
+    <b-form class="login" @submit="login">
       <b-form-group
           id="input-group-mail"
           label="Email address:"
@@ -30,6 +30,7 @@
       <b-button type="reset" variant="danger" style="float: left">Reset</b-button>
       <b-button type="submit" variant="primary" style="float: right">Log In</b-button>
     </b-form>
+    <b-button type="submit" variant="primary" @click="oauthLogin('google')">Google</b-button>
     <b-overlay v-if="loading" :show="loading"
                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;"></b-overlay>
   </div>
@@ -58,8 +59,8 @@ export default {
         router
       });
     },
-    formReset(e) {
-      console.log(e)
+    oauthLogin(provider) {
+      this.$store.dispatch('oauthLogin', { provider: provider, service: this.$gAuth, router: this.$router})
     }
   }
 }

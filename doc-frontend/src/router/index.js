@@ -58,6 +58,15 @@ const routes = [
         return Dashboard;
       } else return Login;
     }
+  },
+  {
+    path: '/create/profile',
+    name: 'Create Profile',
+    get component() {
+      if (!store.getters.loggedIn) {
+        return () => import('@/views/CreateProfile')
+      } else return Profile
+    }
   }
 ]
 

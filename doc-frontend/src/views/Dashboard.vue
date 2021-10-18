@@ -1,12 +1,17 @@
 <template>
   <div>
-
+    <Sidebar></Sidebar>
   </div>
 </template>
 
 <script>
+import Sidebar from "@/components/Sidebar";
+
 export default {
-  name: "Dashboard"
+  name: "Dashboard",
+  components: {
+    Sidebar
+  }
 }
 </script>
 

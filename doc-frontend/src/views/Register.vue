@@ -2,7 +2,7 @@
   <div>
     <div>
       <h1>Register</h1>
-      <b-form class="register" @submit="register" @reset="formReset">
+      <b-form class="register" @submit="register">
         <hr style="background-color: #646464; height: 1px;">
         <b-form-group
             id="register-auth-info"
@@ -24,36 +24,13 @@
               v-model="form.email"
               type="email"
               placeholder="max.mustermann@sample.com"
+              required
           ></b-form-input>
           <br>
-          <label for="register-password-input">Password:</label>
-          <b-form-input
-              type="password"
-              v-model="form.password"
-              placeholder="Password"
-              id="register-password-input"
-          ></b-form-input>
-          <b-form-invalid-feedback :state="validatePassword">
-            Your password must be at least 8 characters long and contain all of the following:
-            <ul>
-              <li>Capital and non-capital letters. AaBbCc...</li>
-              <li>Numbers: 0123456789</li>
-              <li>Special characters: #?!@$%^&*-</li>
-            </ul>
-          </b-form-invalid-feedback>
-          <br>
-          <label for="register-password-repeat">Repeat Password:</label>
-          <b-form-input
-              type="password"
-              v-model="form.repeat_password"
-              placeholder="Repeat Password"
-              id="register-password-repeat"
-          ></b-form-input>
-          <b-form-invalid-feedback :state="validatePasswordsMatch">
-            Passwords must match.
-          </b-form-invalid-feedback>
-          <br>
+
+          <repeat-password-input v-model="form.password" optional></repeat-password-input>
         </b-form-group>
+
         <b-button variant="primary" type="submit" style="float: right">Sign Up</b-button>
         <b-button variant="danger" type="reset" style="float: left">Reset Form</b-button>
       </b-form>
@@ -65,16 +42,17 @@
 
 <script>
 import router from "@/router";
+import RepeatPasswordInput from "@/components/RepeatPasswordInput";
 
 export default {
   name: "Register",
+  components: {RepeatPasswordInput},
   data: () => {
     return {
       form: {
         nickname: "",
         email: "",
-        password: "",
-        repeat_password: ""
+        password: ""
       },
       loading: false
     }
@@ -82,33 +60,16 @@ export default {
   methods: {
     register(e) {
       e.preventDefault();
-      this.$store.dispatch('register', {
-        nickname: this.form.nickname,
-        email: this.form.email,
-        password: this.form.password,
-        router
-      });
-    },
-    formReset(e) {
-      console.log(e); //@Debug
-    },
-    testPassword() {
-      return this.form.password.length > 8                // Length > 8
-          && /[A-Z]/.test(this.form.password)             // Contains uppercase characters
-          && /[a-z]/.test(this.form.password)             // Contains lowercase characters
-          && /[0-9]/.test(this.form.password)             // Contains numbers
-          && /[#?!@$%^&*-]/.test(this.form.password);     // Contains special characters
-    },
-    passwordsMatch() {
-      return this.form.password === this.form.repeat_password  // Passwords Match
-    }
-  },
-  computed: {
-    validatePassword() {
-      return this.testPassword();
-    },
-    validatePasswordsMatch() {
-      return this.passwordsMatch();
+      if (this.form.password === "") {
+        alert("Please choose a valid password");
+      } else {
+        this.$store.dispatch('register', {
+          nickname: this.form.nickname,
+          email: this.form.email,
+          password: this.form.password,
+          router
+        });
+      }
     }
   }
 }
