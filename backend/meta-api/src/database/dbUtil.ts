@@ -31,13 +31,10 @@ export function login(password: string, email?: string) {
     return new Promise<IUser>((resolve, reject) => {// @ts-ignore
 
         UserModel.find({email: email}, (err, data) => {
-
-            console.log(data[0]);
             if (err) {
                 reject(err);
             } else if (data.length > 0) {
                 bcrypt.compare(password, data[0].password).then((res: any) => {
-                    console.log("bcrypt res: ", res);
                     if (res) {
                         resolve(new User(
                             data[0].email,
@@ -50,7 +47,7 @@ export function login(password: string, email?: string) {
                         reject("Authentication invalid!");
                     }
                 }).catch((err: any) => {
-                    console.log(err);
+                    console.log(err);   //@Debug
                     reject(err);
                 })
             } else {

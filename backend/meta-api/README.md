@@ -2,6 +2,8 @@
 
 This api provides the structure and business logic of the backend.
 
+For setup you have to manually create the email index in the users collection.
+
 Responsible for:
  - Mapping meta-data to uploaded files
  - Retrieving files

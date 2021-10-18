@@ -34,7 +34,6 @@ app.use(session({
 app.use("/user", userRouter);
 
 
-
 dbConnect(
   process.env.MONGODB_HOST!,
   process.env.MONGODB_PORT!,
