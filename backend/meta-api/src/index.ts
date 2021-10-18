@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import {dbConnect} from "./database/dbUtil";
+import {dbConnect} from "./helper/dbUtil";
 import session from "express-session";
 import {IUser} from "./database/dbTypes";
 import userRouter from "./routes/userRoutes";

@@ -107,7 +107,7 @@ app.post('/file/bulk/upload', async (req: Request, res: Response) => {
  * Returns a list of file metadata for a user
  */
 app.get('/file/list:uid', (req: Request, res: Response) => {
-    DocumentModel.find({"_id": false, }, (err, data) => {
+    DocumentModel.find({ $in: {"access.uid": req.params.uid!} } ,{"_id": false, }, undefined, (err, data) => {
         if (err) {
             res.status(500);
             res.send({

@@ -64,7 +64,7 @@ export default new Vuex.Store({
             });
         },
         /**
-         * Takes a user and sends it for registration to the backend.
+         * Takes a user and sends it as registration request to the backend.
          * @param context
          * @param data Registration data in the form of: see README ##registration
          */
@@ -79,6 +79,10 @@ export default new Vuex.Store({
                         if (!res.data.err) {
                             data.router.push("/login")
                         } else {
+                            if (res.data.exist) {
+                                alert("User with given email already exists");
+                                data.router.push("/login");
+                            }
                             console.log(res.data.err)
                         }
                     }).catch(err => {
