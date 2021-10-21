@@ -20,7 +20,7 @@ export default new Vuex.Store({
             state.user = opts.user;
             state.loggedIn = true;
             //@Todo implement auto logout?
-            if (opts.next) {
+            if (state.loggedIn && opts.next) {
                 opts.next();
             }
         },
@@ -119,7 +119,6 @@ export default new Vuex.Store({
                 axios.post(API_ADDRESS + '/user/oauth/check/google', {
                     access_token: g.getAuthResponse().access_token
                 }).then(res => {
-                    console.log(res);
                     if (res.data.loggedIn) { //the user exists in the database and has been logged in
                         context.commit('login', {
                             user: res.data,
@@ -146,7 +145,7 @@ export default new Vuex.Store({
             return state.oauthCache;
         },
         email: state => {
-            return state.user.email;    
+            return state.user.email;
         }
     },
     modules: {},

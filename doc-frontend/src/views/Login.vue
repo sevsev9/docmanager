@@ -30,7 +30,7 @@
       <b-button type="reset" variant="danger" style="float: left">Reset</b-button>
       <b-button type="submit" variant="primary" style="float: right">Log In</b-button>
     </b-form>
-    <b-button type="submit" variant="primary" @click="oauthLogin('google')">Google</b-button>
+    <b-button type="submit" variant="primary" @click="oauthLogin('google')"><img class="google-icon-svg" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>&nbsp;&nbsp;Sign in with Google</b-button>
     <b-overlay v-if="loading" :show="loading"
                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;"></b-overlay>
   </div>

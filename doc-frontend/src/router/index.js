@@ -53,20 +53,7 @@ const routes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
-    get component() {
-      if (store.getters.loggedIn) {
-        return Dashboard;
-      } else return Login;
-    }
-  },
-  {
-    path: '/create/profile',
-    name: 'Create Profile',
-    get component() {
-      if (!store.getters.loggedIn) {
-        return () => import('@/views/CreateProfile')
-      } else return Profile
-    }
+    component: Dashboard
   }
 ]
 
