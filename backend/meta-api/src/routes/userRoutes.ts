@@ -13,32 +13,44 @@ import {createUser} from "../protocol/Checks";
 // SubApi /user/*
 const router = Router();
 
-function clearSession(req: Request, res: Response | undefined) {
+function clearSession(req: Request, res: Response | undefined, next: Function | undefined) {
   return new Promise((resolve, reject) => {
-    req.session.user = undefined;
-    req.session.destroy((err) => {
-      if (err) {
-        console.log(err);
-        if (res) {
-          res.status(500);
-          res.send({
-            err: true,
-            msg: "Error occurred during logout.",
-            errmsg: err
-          });
+    if (req.session.user) {
+      req.session.user = undefined;
+      req.session.destroy((err) => {
+        if (err) {
+          if (res) {
+            res.status(500);
+            res.send({
+              err: true,
+              msg: "Error occurred during logout.",
+              errmsg: err
+            });
+          }
+          reject(err);
+        } else {
+          if (res) {
+            res.status(200);
+            res.send({
+              err: false,
+              msg: "Successfully logged out."
+            })
+          }
+          if (next) {
+            next();
+          } else {
+            resolve("");
+          }
         }
-        reject(err);
+      })
+    } else {
+      if (next) {
+        next();
       } else {
-        if (res) {
-          res.status(200);
-          res.send({
-            err: false,
-            msg: "Successfully logged out."
-          })
-        }
         resolve("");
       }
-    })
+    }
+
   })
 }
 
@@ -99,39 +111,39 @@ router.get('/logout', (req, res) => {
       msg: "Not logged in!"
     });
   } else {
-    clearSession(req, res);
+    clearSession(req, res, undefined).catch(console.error);
   }
 });
 
-router.get('/oauth/check/google', (req, res) => {
-  if (req.session.user) {
-    clearSession(req, undefined);
-  }
-  if (req.body && req.body.email && req.body.auth_token) {
-    checkOAuth(req.body.email, req.body.auth_token).then(_res => {
-      if (_res) { // If _res contains a IUser => log in
-        req.session.user = _res;  //set the session user
-        res.status(200);
-        res.send({
-          email: _res.email,
-          nickname: _res.nickname,
-          registration_date: _res.registration_date,
-          loggedIn: true
-        });
-        res.end();
-      } else {  // Tell the client to go forward with registration
-        res.status(200);
-        res.send({
-          err: false,
-          createFirst: true
-        });
-      }
-    });
-  } else {
-    res.status(400);
-    res.send({err: true, msg: "Malformed body."});
-    res.end();
-  }
+router.post('/oauth/check/google', (req, res) => {
+  console.log(req.body);
+  clearSession(req, undefined, () => {  //consistency check
+    if (req.body && req.body.access_token) {
+      checkOAuth(req.body.access_token).then(_res => {
+        if (_res) { // If _res contains a IUser => log in
+          req.session.user = _res;  //set the session user
+          res.status(200);
+          res.send({
+            email: _res.email,
+            nickname: _res.nickname,
+            registration_date: _res.registration_date,
+            loggedIn: true
+          });
+          res.end();
+        } else {  // Tell the client to go forward with registration
+          res.status(200);
+          res.send({
+            err: false,
+            createFirst: true
+          });
+        }
+      });
+    } else {
+      res.status(400);
+      res.send({err: true, msg: "Malformed body."});
+      res.end();
+    }
+  }).catch(console.error);
 })
 
 export default router;

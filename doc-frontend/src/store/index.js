@@ -114,19 +114,13 @@ export default new Vuex.Store({
 
 
                 //Check if user is already registered with google oauth in the database
-                //@Todo make more effective: Get  email
-                axios.post('/user/oauth/check/google', {
-                    email: g.getBasicProfile().Ot,
+                axios.post(API_ADDRESS + '/user/oauth/check/google', {
                     access_token: g.getAuthResponse().access_token
                 }).then(res => {
                     console.log(res);
                     if (res.data.loggedIn) { //the user exists in the database and has been logged in
-                        context.commit('login',data.user);  //Login the user
+                        context.commit('login',res.data.user);  //Login the user
                     } else if (res.data.createFirst) { //Register the user with google oauth
-                        context.commit('cache',{
-                            email: g.getBasicProfile().Ot,
-                            nickname: g.getBasicProfile().Se
-                        });
                         data.router.push("/create/profile");    //let the user customize their profile
                     }
                 })

@@ -60,7 +60,7 @@ export default {
       });
     },
     oauthLogin(provider) {
-      this.$store.dispatch('oauthLogin', { provider: provider, service: this.$gAuth, router: this.$router})
+      this.$store.dispatch('oAuthLogin', { provider: provider, service: this.$gAuth, router: this.$router})
     }
   }
 }
