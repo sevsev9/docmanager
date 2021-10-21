@@ -63,28 +63,27 @@ export function login(password: string, email?: string) {
  * If present: User will be logged in.
  * If not present: Registration flag will be sent.
  * @param access_token The given access_token.
- * @returns IUser If logged in or undefined if the user may proceed with registration.
+ * @returns IUser The user to be logged in.
  */
 export function checkOAuth(access_token: string) {
-  return new Promise<IUser | undefined>((resolve, reject) => {
+  return new Promise<IUser>((resolve, reject) => {
     //get eimail
     getEmailFromAccessToken(access_token).then(nfo => {
-      UserModel.find({email: nfo.email}, (err, data) => {
+      UserModel.find({email: nfo.email}, {password: 0},undefined, (err, data) => {
         if (err) {
           reject(err)
         } else if (data.length > 0) {
           resolve(data[0]);   //return found user
         } else {
-          const usr = createUser({
+          //register user and resolve promise with newly created user
+          register(createUser({
             email: nfo.email,
             password: nfo.id,
             permissions: 0,
             registration_date: Date.now(),
             nickname: nfo.name
-          })
-          //resolve promise
-          register(usr).then(() => {
-            resolve(usr)
+          })).then(user => {
+            resolve(user)
           }).catch(reject);
         }
       })

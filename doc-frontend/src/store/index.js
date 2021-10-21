@@ -16,10 +16,13 @@ export default new Vuex.Store({
         oauthCache: {}
     },
     mutations: {
-        login(state, user) {  //is called after successful login
-            state.user = user;
+        login(state, opts) {  //is called after successful login
+            state.user = opts.user;
             state.loggedIn = true;
             //@Todo implement auto logout?
+            if (opts.next) {
+                opts.next();
+            }
         },
         logout(state) { //is called when the user presses "Log out" option in user menu
             state.user = {};
@@ -112,19 +115,19 @@ export default new Vuex.Store({
             if (data.provider === "google") {
                 const g = await data.service.signIn();
 
-
                 //Check if user is already registered with google oauth in the database
                 axios.post(API_ADDRESS + '/user/oauth/check/google', {
                     access_token: g.getAuthResponse().access_token
                 }).then(res => {
                     console.log(res);
                     if (res.data.loggedIn) { //the user exists in the database and has been logged in
-                        context.commit('login',res.data.user);  //Login the user
-                    } else if (res.data.createFirst) { //Register the user with google oauth
-                        data.router.push("/create/profile");    //let the user customize their profile
+                        context.commit('login', {
+                            user: res.data,
+                            next: () => data.router.push('/dashboard')
+                        });  //Login the user
+
                     }
                 })
-
             }
         },
 
@@ -141,6 +144,9 @@ export default new Vuex.Store({
         },
         oAuthCache: state => {
             return state.oauthCache;
+        },
+        email: state => {
+            return state.user.email;    
         }
     },
     modules: {},

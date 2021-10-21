@@ -130,12 +130,6 @@ router.post('/oauth/check/google', (req, res) => {
             loggedIn: true
           });
           res.end();
-        } else {  // Tell the client to go forward with registration
-          res.status(200);
-          res.send({
-            err: false,
-            createFirst: true
-          });
         }
       });
     } else {
