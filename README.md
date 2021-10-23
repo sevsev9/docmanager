@@ -9,12 +9,14 @@ The aim of this application is to help people archive, sort, search and find ana
 ### Frontend
   - VueJS
     - Axios (REST API Requests)
+    - vue-google-auth (Google OAuth)
     - VueX Store (State Management)
     - Vue Router
-    - Typescript (Type Safety)
     - BootstrapVue (Components)
 
 ### Backend
   - NodeJS
     - Typescript (Type Safety)
-    - 
+    - Express / +Session
+    - mongoose (MongoDB)
+    - minio self-hosted s3 buckets
