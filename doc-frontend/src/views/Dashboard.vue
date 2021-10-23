@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div style="width: 100%; height: available">
     <Sidebar></Sidebar>
+    <router-view class="dashboard-router-view" name="fileview"></router-view>
   </div>
 </template>
 
@@ -21,5 +22,8 @@ export default {
 </script>
 
 <style scoped>
-
+.dashboard-router-view {
+  width: 100%;
+  height: 100vh;
+}
 </style>

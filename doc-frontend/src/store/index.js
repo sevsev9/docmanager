@@ -13,7 +13,8 @@ export default new Vuex.Store({
         user: {},
         upload_queue: [],
         loggedIn: false,
-        oauthCache: {}
+        oauthCache: {},
+        nav: ""
     },
     mutations: {
         login(state, opts) {  //is called after successful login
@@ -38,6 +39,9 @@ export default new Vuex.Store({
         },
         cache(state, data) {
             state.oauthCache = data;
+        },
+        setDashboardRoute(state, route) {
+            state.nav = route;
         }
     },
     actions: {
@@ -129,7 +133,6 @@ export default new Vuex.Store({
                 })
             }
         },
-
     },
     getters: {
         loggedIn: state => {
@@ -146,6 +149,9 @@ export default new Vuex.Store({
         },
         email: state => {
             return state.user.email;
+        },
+        getRoute: state => {
+            return state.nav
         }
     },
     modules: {},

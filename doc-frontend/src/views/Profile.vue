@@ -34,9 +34,9 @@
     </table>
     <div class="confirm_screen" v-if="confirm_screen">
       <h2>Change {{ change_type }}</h2>
-      <b-form-input type="password" placeholder="Confirm New Password"></b-form-input>
-      <b-form-input type="password" placeholder="Current Password"></b-form-input>
-      <b-button variant="danger" @click="confirm_change"> Confirm</b-button>
+      <b-form-input type="password" placeholder="Confirm New Password" v-model="confirm_password"></b-form-input>
+      <b-form-input type="password" placeholder="Current Password" v-model="auth_password"></b-form-input>
+      <b-button variant="danger" @click="confirm_change" :disabled="passwordsMatch"> Confirm</b-button>
     </div>
   </div>
 </template>
@@ -49,6 +49,8 @@ export default {
       nickname: "",
       email: "",
       password: "",
+      confirm_password: "",
+      auth_password: "",
       confirm_screen: false,
       change_type: ""
     }
@@ -59,7 +61,6 @@ export default {
       this.confirm_screen = true;
     },
     confirm_change() {
-//@Todo ask for password on every change
       if (this.change_type === 'Nickname') {
 
         //@Todo implement nickname change
@@ -89,6 +90,9 @@ export default {
     },
     validatePassword() {
       return !this.testPassword();
+    },
+    passwordsMatch() {
+      return (this.password !== this.confirm_password);
     }
   }
 }

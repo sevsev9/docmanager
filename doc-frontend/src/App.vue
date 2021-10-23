@@ -5,35 +5,45 @@
       |
       <router-link to="/about">About</router-link>
 
-      <b-dropdown id="user-dropdown" :text="($store.getters.loggedIn) ? 'Hello ' + $store.getters.userName : 'Login'"
+      <b-dropdown id="user-dropdown" :text="($store.getters.loggedIn) ? 'Hello ' + $store.getters.userName : 'Sign In'"
                   variant="primary" class="m-2" right>
         <div v-if="$store.getters.loggedIn">
           <b-dropdown-item href="/profile">Profile</b-dropdown-item>
-          <b-dropdown-item href="/dashboard">Dashboard</b-dropdown-item>
+          <b-dropdown-item href="/file">Dashboard</b-dropdown-item>
           <b-dropdown-item @click="$store.dispatch('logout', $router)">Logout</b-dropdown-item>
         </div>
         <div v-else>
           <b-dropdown-item href="/login">Login</b-dropdown-item>
-          <b-dropdown-item href="/register">Register</b-dropdown-item>
+          <b-dropdown-item href="/register">Sign Up</b-dropdown-item>
         </div>
       </b-dropdown>
     </div>
-    <router-view/>
+    <router-view style="height: 100vh; width: 100%" class="main-router-view"/>
   </div>
 </template>
 
 <style>
+
+.main-router-view {
+  height: 90vh;
+  width: 100%;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: 100vh;
+  overflow: hidden;
 }
 
 #nav {
-  padding: 30px;
+  height: 6vh;
+  padding: 2vh;
+  margin: 0;
   width: 100%;
+  border-bottom: 1px solid darkgrey;
 }
 
 #nav a {

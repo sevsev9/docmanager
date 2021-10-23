@@ -6,6 +6,10 @@ import Login from "@/views/Login";
 import Register from "@/views/Register";
 import Profile from "@/views/Profile";
 import Dashboard from "@/views/Dashboard";
+import Stats from "../views/file/Stats";
+import FileTable from "../views/file/FileTable";
+import FileUpload from "../views/file/FileUpload";
+import FileList from "../views/file/FileList";
 
 Vue.use(VueRouter)
 
@@ -51,9 +55,27 @@ const routes = [
     }
   },
   {
-    path: '/dashboard',
+    path: '/file',
     name: 'Dashboard',
-    component: Dashboard
+    component: Dashboard,
+    children: [
+      {
+        path: '/file/stats',
+        component: Stats
+      },
+      {
+        path: '/file/table',
+        component: FileTable
+      },
+      {
+        path: '/file/upload',
+        component: FileUpload
+      },
+      {
+        path: '/file/list',
+        component: FileList
+      }
+    ]
   }
 ]
 
