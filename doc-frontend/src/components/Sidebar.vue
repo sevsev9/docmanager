@@ -8,10 +8,10 @@
                v-model="sidebar_state">
       <div class="px-3 py-2">
         <div class="button-head">
-          <b-button :variant="dashboardVariantGetter"><router-link to="/files/stats">Dashboard</router-link></b-button>
-          <b-button :variant="listVariantGetter"><router-link to="/files/list">File List</router-link></b-button>
-          <b-button :variant="tableVariantGetter"><router-link to="/files/table">File Table</router-link></b-button>
-          <b-button :variant="uploadVariantGetter"><router-link to="/files/upload">File Upload</router-link></b-button>
+          <b-button :variant="dashboardVariantGetter" @click="$router.push('/file/stats')">Dashboard</b-button>
+          <b-button :variant="listVariantGetter" @click="$router.push('/file/list')">File List</b-button>
+          <b-button :variant="tableVariantGetter" @click="$router.push('/file/table')">File Table</b-button>
+          <b-button :variant="uploadVariantGetter" @click="$router.push('/file/upload')">File Upload</b-button>
         </div>
       </div>
     </b-sidebar>

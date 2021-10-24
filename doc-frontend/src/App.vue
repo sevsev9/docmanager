@@ -18,7 +18,7 @@
         </div>
       </b-dropdown>
     </div>
-    <router-view style="height: 100vh; width: 100%" class="main-router-view"/>
+    <router-view/>
   </div>
 </template>
 

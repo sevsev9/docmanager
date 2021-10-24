@@ -58,7 +58,7 @@ export default new Vuex.Store({
             }).then(res => {
                 if (res.data.email) {
                     context.commit('login', res.data);
-                    data.router.push("/user/dashboard");
+                    data.router.push("/file");
                 }
             }).catch(err => {
                 if (err.response.statusCode === 403) {
@@ -126,7 +126,7 @@ export default new Vuex.Store({
                     if (res.data.loggedIn) { //the user exists in the database and has been logged in
                         context.commit('login', {
                             user: res.data,
-                            next: () => data.router.push('/dashboard')
+                            next: () => data.router.push('/file')
                         });  //Login the user
 
                     }

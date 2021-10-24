@@ -1,11 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 import store from '../store/index'
+
+import Home from '@/views/Home.vue'
+import About from "@/views/About";
+
 import Login from "@/views/Login";
 import Register from "@/views/Register";
 import Profile from "@/views/Profile";
 import Dashboard from "@/views/Dashboard";
+
 import Stats from "../views/file/Stats";
 import FileTable from "../views/file/FileTable";
 import FileUpload from "../views/file/FileUpload";
@@ -17,15 +21,12 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    components: Home
   },
   {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: About
   },
   {
     path: '/login',
@@ -60,19 +61,19 @@ const routes = [
     component: Dashboard,
     children: [
       {
-        path: '/file/stats',
+        path: 'stats',
         component: Stats
       },
       {
-        path: '/file/table',
+        path: 'table',
         component: FileTable
       },
       {
-        path: '/file/upload',
+        path: 'upload',
         component: FileUpload
       },
       {
-        path: '/file/list',
+        path: 'list',
         component: FileList
       }
     ]
