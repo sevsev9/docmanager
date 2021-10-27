@@ -1,15 +1,19 @@
 import {Request, Response} from "express";
-import {app} from "../index";
+import Router from "express";
 import {DocumentModel} from "../database/dbSchemas";
 import {checkDocument, createDocument} from "../protocol/Checks";
 import axios from "axios";
 
+const router = Router();
 
-app.post('/file/upload', (req: Request, res: Response) => {
-    if (req.body.metadata) {
+
+router.post('/upload', (req: Request, res: Response) => {
+    // @ts-ignore
+    res.redirect(307, process.env.FILE_UPLOAD_SERVICE_URL+"/upload");
+    /*if (req.body.metadata) {
         if (req.body.metadata.icon) {   //is document
             //@TODO continue here
-            axios.get(`${process.env.FILE_UPLOAD_SERVICE_URL}/presigned/upload?`).then(resp => {
+            axios.get(`${process.env.FILE_UPLOAD_SERVICE_URL}/upload`).then(resp => {
                res.status(200);
                res.send(resp);
             }).catch(err => {
@@ -30,12 +34,12 @@ app.post('/file/upload', (req: Request, res: Response) => {
             error: true,
             msg: "Malformed request: Body missing!"
         });
-    }
-
+    }*/
+    res.status(200);
     res.end();
 });
 
-app.post('/file/download', (req: Request, res: Response) => {
+router.post('/download', (req: Request, res: Response) => {
     if (req.body.metadata) {
         //Metadata Verification/checks
         //Request Download Link from File Download Service (DNS: file.download.internal)
@@ -52,7 +56,7 @@ app.post('/file/download', (req: Request, res: Response) => {
     res.end();
 });
 
-app.post('/file/bulk/download', (req: Request, res: Response) => {
+router.post('/bulk/download', (req: Request, res: Response) => {
     if (req.body.list) {
         // check if all files in list exist (identification via eTag or name)
         // Request download URLs from file download service(s) (DNS: file.download.internal)
@@ -68,7 +72,7 @@ app.post('/file/bulk/download', (req: Request, res: Response) => {
 });
 
 
-app.post('/file/bulk/upload', async (req: Request, res: Response) => {
+router.post('/file/bulk/upload', async (req: Request, res: Response) => {
     if (req.body.list) {
         const documents = [];
         for (const elem in req.body.list) {
@@ -106,7 +110,7 @@ app.post('/file/bulk/upload', async (req: Request, res: Response) => {
 /**
  * Returns a list of file metadata for a user
  */
-app.get('/file/list:uid', (req: Request, res: Response) => {
+router.get('/file/list:uid', (req: Request, res: Response) => {
     DocumentModel.find({ $in: {"access.uid": req.params.uid!} } ,{"_id": false, }, undefined, (err, data) => {
         if (err) {
             res.status(500);
@@ -126,3 +130,5 @@ app.get('/file/list:uid', (req: Request, res: Response) => {
         res.end();
     });
 });
+
+export default router;

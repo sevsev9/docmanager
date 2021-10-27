@@ -4,6 +4,7 @@ import {dbConnect} from "./helper/dbUtil";
 import session from "express-session";
 import {IUser} from "./database/dbTypes";
 import userRouter from "./routes/userRoutes";
+import fileRouter from "./routes/fileRoutes"
 
 const oneDay = 1000 * 60 * 60 * 24;
 
@@ -32,6 +33,7 @@ app.use(session({
   resave: false
 }));
 app.use("/user", userRouter);
+app.use("/file", fileRouter)
 
 
 dbConnect(
