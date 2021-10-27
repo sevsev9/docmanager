@@ -8,18 +8,11 @@ const router = Router();
 
 
 router.post('/upload', (req: Request, res: Response) => {
-    // @ts-ignore
-    res.redirect(307, process.env.FILE_UPLOAD_SERVICE_URL+"/upload");
-    /*if (req.body.metadata) {
+    console.log(req.body.metadata)
+    if (req.body.metadata) {
         if (req.body.metadata.icon) {   //is document
-            //@TODO continue here
-            axios.get(`${process.env.FILE_UPLOAD_SERVICE_URL}/upload`).then(resp => {
-               res.status(200);
-               res.send(resp);
-            }).catch(err => {
-                res.status(400);
-                res.send(err);
-            });
+            //@Todo add metadata
+            res.redirect(307, process.env.FILE_UPLOAD_SERVICE_URL+"/upload");
         } else { //is icon
 
         }
@@ -34,9 +27,7 @@ router.post('/upload', (req: Request, res: Response) => {
             error: true,
             msg: "Malformed request: Body missing!"
         });
-    }*/
-    res.status(200);
-    res.end();
+    }
 });
 
 router.post('/download', (req: Request, res: Response) => {
