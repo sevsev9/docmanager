@@ -12,43 +12,61 @@ let upload = multer({storage: multer.memoryStorage()});
 const router = Router();
 
 router.post('/upload', upload.any(), (req: Request, res: Response) => {
-    if (req.body.metadata) {    //@Todo check if session is present in production and user still has space for the file to be uploaded
-        if (req.files) {
-            // Create class containing the metadata
-            let doc = createDocument(JSON.parse(req.body.metadata));
+    // @ts-ignore
+    if (req.session.user) {
+        if (req.body.metadata) {    //@Todo check if session is present in production and user still has space for the file to be uploaded
+            if (req.files) {
+                // Create class containing the metadata
+                let meta = JSON.parse(req.body.metadata);
+                // @ts-ignore
+                meta.owner = req.session.user._id;
+                let doc = createDocument(meta);
+                console.log(doc);
 
-            metaUnique(doc).then(unique => {
-                if (unique) { //proceed with upload
-                   let fd = new FormData();
-                   // @ts-ignore
-                    fd.append('file', req.files[0].buffer, req.files[0].originalname)
-                    axios.post('http://localhost:8080/upload', fd, { headers: fd.getHeaders()})
-                        .then(res => {
-                            if (res.status === 200) { // file upload was successful
-                                // Create new Database entry of file
-                                doc.etag = res.data.eTag    // Set eTag for file identification and downloading.
+                metaUnique(doc).then(unique => {    //@Todo replacement dialogue on frontend
+                    if (unique) { //proceed with upload
+                        let fd = new FormData();
+                        // @ts-ignore
+                        fd.append('file', req.files[0].buffer, doc.owner + "_" + req.files[0].originalname)
+                        axios.post('http://localhost:8080/upload', fd, { headers: fd.getHeaders()})
+                            .then(_res => {
+                                if (_res.status === 200) { // file upload was successful
+                                    // Create new Database entry of file
+                                    doc.etag = _res.data.eTag    // Set eTag for file identification and downloading.
 
-                                new DocumentModel(doc).save().then(r => {
-                                    console.log(`[Meta-Upload] Saved new document in database - name: ${r.name} etag: ${r.etag}`);
-                                });
-                            }
-                        })
-                        .catch(console.error);
-                } else {
-                    res.status(409);
-                    res.send({
-                        err: true,
-                        msg: "Document with that name already exists in the database."
-                    });
-                    res.end();
-                }
-            });
+                                    new DocumentModel(doc).save().then(r => {
+                                        res.status(200);
+                                        res.send({
+                                            err: false,
+                                            msg: "Successfully uploaded given file"
+                                        })
+                                        console.log(`[Meta-Upload] Saved new document in database - name: ${r.name} etag: ${r.etag}`);
+                                    });
+                                }
+                            })
+                            .catch(console.error);
+                    } else {
+                        res.status(409);
+                        res.send({
+                            err: true,
+                            msg: "Document with that name already exists in the database."
+                        });
+                        res.end();
+                    }
+                });
+            }
+            // check if metadata document would be unique
+            // send upload to file upload service
+            // upon upload completion insert metadata document
+            // Optional: Log upload
+            // return success to client
         }
-        // check if metadata document would be unique
-        // send upload to file upload service
-        // upon upload completion insert metadata document
-        // Optional: Log upload
-        // return success to client
+    } else {
+        res.status(401);
+        res.send({
+            err: true,
+            msg: "User not logged in."
+        })
     }
 });
 

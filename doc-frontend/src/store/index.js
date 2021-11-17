@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from "axios";
 import bcrypt from "bcryptjs";
 import createPersistedState from "vuex-persistedstate"
 
@@ -52,7 +51,7 @@ export default new Vuex.Store({
      * @returns {Promise<unknown>}
      */
     login(context, data) {
-      axios.post(API_ADDRESS + "/user/login", {
+      Vue.prototype.$axios.post(API_ADDRESS + "/user/login", {
         email: data.email,
         password: data.password
       }).then(res => {
@@ -78,7 +77,7 @@ export default new Vuex.Store({
     register(context, data) {
       bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(data.password, salt, (err, hash) => {
-          axios.post(API_ADDRESS + "/user/register", {
+          Vue.prototype.$axios.post(API_ADDRESS + "/user/register", {
             nickname: data.nickname,
             email: data.email,
             password: hash
@@ -101,7 +100,7 @@ export default new Vuex.Store({
      */
     logout(context, router) {
       context.commit("logout");
-      axios.get(API_ADDRESS + "/user/logout").then(res => {
+      Vue.prototype.$axios.get(API_ADDRESS + "/user/logout").then(res => {
         alert("Successfully logged out");
         console.log(res);
         router.push("/");
@@ -120,7 +119,7 @@ export default new Vuex.Store({
         const g = await data.service.signIn();
 
         //Check if user is already registered with google oauth in the database
-        axios.post(API_ADDRESS + '/user/oauth/check/google', {
+        Vue.prototype.$axios.post(API_ADDRESS + '/user/oauth/check/google', {
           access_token: g.getAuthResponse().access_token
         }).then(res => {
           if (res.data.loggedIn) { //the user exists in the database and has been logged in
@@ -134,7 +133,7 @@ export default new Vuex.Store({
       }
     },
     uploadFile(context, data) {
-      axios.post(API_ADDRESS + '/file/upload', data.formData, {onUploadProgress: data.onProgress}).then(res =>{
+      Vue.prototype.$axios.post(API_ADDRESS + '/file/upload', data.formData, {onUploadProgress: data.onProgress}).then(res =>{
         data.onComplete(res)
       }).catch(err => {
         console.log(err.response.data.msg)

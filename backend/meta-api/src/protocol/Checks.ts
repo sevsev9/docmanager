@@ -18,6 +18,7 @@ export function createDocument(doc: Object) {
     const upload = (doc.from.getDate && typeof doc.upload_date.getDate === "function") ? doc.upload_date : Date.now();
     return new Document(
         doc.name,
+        doc.owner,
         doc.type,
         '',
         doc.size,

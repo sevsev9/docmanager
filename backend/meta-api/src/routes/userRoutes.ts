@@ -124,12 +124,11 @@ router.get('/logout', (req, res) => {
 });
 
 router.post('/oauth/check/google', (req, res) => {
-  console.log(req.body);
   clearSession(req, undefined, () => {  //consistency check
     if (req.body && req.body.access_token) {
       checkOAuth(req.body.access_token).then(_res => {
         if (_res) { // If _res contains a IUser => log in
-          req.session.user = _res;  //set the session user
+          req.session.user = _res;  //set the session user67
           res.status(200);
           res.send({
             email: _res.email,

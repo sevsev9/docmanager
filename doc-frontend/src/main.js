@@ -6,6 +6,7 @@ import App from './App.vue'
 import store from './store'
 import router from './router'
 import GAuth from 'vue-google-oauth2'
+import axios from 'axios'
 
 Vue.config.productionTip = false;
 
@@ -15,6 +16,12 @@ Vue.use(GAuth, {
   prompt: 'select_account',
   fetch_basic_profile: true
 })
+
+const instance = axios.create({
+  withCredentials: true
+})
+
+Vue.prototype.$axios = instance;
 
 new Vue({
   store,

@@ -14,6 +14,7 @@ import Stats from "../views/file/Stats";
 import FileTable from "../views/file/FileTable";
 import FileUpload from "../views/file/FileUpload";
 import FileList from "../views/file/FileList";
+import session_info from "@/views/debug/session_info";
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ const routes = [
     path: '/about',
     name: 'About',
     component: About
+  },
+  {
+    path: '/session-info',
+    name: "Debug Session Info",
+    component: session_info
   },
   {
     path: '/login',

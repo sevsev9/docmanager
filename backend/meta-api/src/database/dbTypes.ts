@@ -1,5 +1,6 @@
 export interface IDocument {
   name: string,
+  owner: string,  // ObjectID from the user that created it
   type: Object,
   etag: string,
   size: Number, // number of the filesize in kB
@@ -17,6 +18,7 @@ export interface IDocument {
 
 export class Document implements IDocument{
   name: string;
+  owner: string;
   type: Object;
   etag: string;
   size: Number;
@@ -33,6 +35,7 @@ export class Document implements IDocument{
 
   constructor(
       name: string,
+      owner: string,
       type: Object,
       eTag: string,
       size: Number,
@@ -47,6 +50,7 @@ export class Document implements IDocument{
       thumbnail_etag?: string
   ) {
     this.name = name;
+    this.owner = owner;
     this.type = type;
     this.etag = eTag;
     this.size = size;
@@ -63,6 +67,7 @@ export class Document implements IDocument{
 }
 
 export interface IUser {
+  _id: string, //File identifier in databases
   email: string, //Primary Identifier
   password: string, //sha512 encoded
   registration_date: Number,
@@ -71,13 +76,15 @@ export interface IUser {
 }
 
 export class User implements IUser {
+  _id: string;
   email: string;
   password: string;
   permissions: Number;
   registration_date: Number;
   nickname?: string;
 
-  constructor(email: string, password: string, permissions: Number, registration_date: Number, nickname: string) {
+  constructor(_id: string, email: string, password: string, permissions: Number, registration_date: Number, nickname: string) {
+    this._id = _id;
     this.email = email;
     this.password = password;
     this.permissions = permissions;

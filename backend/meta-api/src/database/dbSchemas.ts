@@ -4,6 +4,7 @@ import {IDocument, IUser} from "./dbTypes";
 
 const dbDocument = new Schema<IDocument>({
     name: {type: String, required: true, unique: true, index: true},
+    owner: {type: String, required: true},
     type: {type: Object, required: true},
     etag: {type: String, required: true, unique: true},
     tags: {type: Array, required: true},

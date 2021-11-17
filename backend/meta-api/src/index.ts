@@ -1,12 +1,12 @@
 import express from "express";
 import dotenv from "dotenv";
 import {dbConnect} from "./helper/dbUtil";
-import session from "express-session";
+import session, {MemoryStore} from "express-session";
 import {IUser} from "./database/dbTypes";
 import userRouter from "./routes/userRoutes";
 import fileRouter from "./routes/fileRoutes"
 
-const oneDay = 1000 * 60 * 60 * 24;
+const sessionStore = new MemoryStore();
 
 dotenv.config();
 
@@ -18,22 +18,35 @@ declare module "express-session" {
 }
 
 export const app = express();
+
+app.use(session({
+  secret: process.env.SESSION_SECRET!,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    secure: false,
+    maxAge: 24 * 60 * 60 * 1000
+  },
+  store: sessionStore
+}));
 // Enable CORS
 app.use(function(req, res, next) {
   res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Credentials", "true");
   res.set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-app.use(session({
-  secret: process.env.SESSION_SECRET!,
-  saveUninitialized: true,
-  cookie: {maxAge: oneDay},
-  resave: false
-}));
+
 app.use("/user", userRouter);
 app.use("/file", fileRouter)
+
+app.get('/sess', (req, res) => {
+  // @ts-ignore
+  res.send(sessionStore.sessions)
+  console.log(req.sessionID)
+})
 
 
 dbConnect(
