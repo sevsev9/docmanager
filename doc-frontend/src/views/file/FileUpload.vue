@@ -20,10 +20,10 @@
           <b-form-input type="text" v-model="meta.type" placeholder="File Type" required></b-form-input>
           <b-form-input type="text" v-model="meta.sizeFormatted" disabled placeholder="File Size"> Bytes</b-form-input>
           <b-form-tags input-id="tags" v-model="meta.tags" placeholder="Add Tags by pressing 'Enter'..." required></b-form-tags>
-          <b-form-input type="text" placeholder="Category" required></b-form-input>
+          <b-form-input type="text" placeholder="Category" v-model="meta.category" required></b-form-input>
           <!-- @Todo: add grant other user access -->
-          <b-form-textarea type="text" placeholder="Description" required></b-form-textarea>
-          <b-form-input type="text" placeholder="Content"></b-form-input>
+          <b-form-textarea type="text" placeholder="Description" v-model="meta.description" required></b-form-textarea>
+          <b-form-input type="text" placeholder="Content" v-model="meta.content"></b-form-input>
           <b-form-input type="date" placeholder="The date which the document was issued (optional)." v-model="meta.from"></b-form-input>
           <b-button type="submit">Upload</b-button>
         </b-form-group>
@@ -70,6 +70,7 @@ export default {
         category: "",
         access: [],
         content: "",
+        description: "",
         from: "",
         additional_info: "" //@Todo: for later use
       }

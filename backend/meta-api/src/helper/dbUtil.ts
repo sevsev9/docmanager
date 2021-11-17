@@ -1,6 +1,6 @@
 import {connect} from "mongoose";
-import {IUser, User} from "../database/dbTypes";
-import {UserModel} from "../database/dbSchemas";
+import {IDocument, IUser, User} from "../database/dbTypes";
+import {UserModel, DocumentModel} from "../database/dbSchemas";
 import bcrypt from "bcryptjs";
 import {getEmailFromAccessToken} from "./oAuthHelper";
 import {createUser} from "../protocol/Checks";
@@ -89,5 +89,26 @@ export function checkOAuth(access_token: string) {
       })
     }).catch(console.error)
   });
+}
+
+export function metaUnique(metadata: IDocument) {
+  return new Promise<boolean>(async (resolve, reject) => {
+    try {
+      // @ts-ignore
+      const doc: Array<IDocument> = await DocumentModel.findOne({name: metadata.name});
+
+      if (doc === null) {
+        resolve(true);
+      } else {
+        if (doc.length > 0) {
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      }
+    } catch (e) {
+      reject(e)
+    }
+  })
 }
 

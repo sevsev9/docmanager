@@ -14,17 +14,22 @@ export function checkDocument(doc: Object) {
 
 export function createDocument(doc: Object) {
     // date has to be formatted like: YYYY-MM-DD`T`HH:MM:SS or otherwise jsDate parsable
-    const date = (typeof doc.from.getDate === "function") ? doc.from : new Date(doc.from);
-    const upload = (typeof doc.upload_date.getDate === "function") ? doc.upload_date : Date.now();
-    return new IDocument(
+    const date = (doc.from.getDate && typeof doc.from.getDate === "function") ? doc.from : new Date(doc.from);
+    const upload = (doc.from.getDate && typeof doc.upload_date.getDate === "function") ? doc.upload_date : Date.now();
+    return new Document(
         doc.name,
+        doc.type,
+        '',
+        doc.size,
         doc.tags,
-        doc.content,
         doc.category,
         doc.description,
         upload,
-        doc.thumbnail_etag,
-        date
+        '',
+        {},
+        doc.content,
+        date,
+        undefined
     );
 }
 

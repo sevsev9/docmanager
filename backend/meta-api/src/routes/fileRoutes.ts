@@ -3,28 +3,44 @@ import Router from "express";
 import {DocumentModel} from "../database/dbSchemas";
 import {checkDocument, createDocument} from "../protocol/Checks";
 import multer from "multer";
+import {metaUnique} from "../helper/dbUtil";
+import axios from "axios";
+import FormData from "form-data";
 
 let upload = multer({storage: multer.memoryStorage()});
 
 const router = Router();
 
-
 router.post('/upload', upload.any(), (req: Request, res: Response) => {
-    console.log(req.body.metadata);
-    console.log(req.files);
+    if (req.body.metadata) {    //@Todo check if session is present in production and user still has space for the file to be uploaded
+        if (req.files) {
+            // Create class containing the metadata
+            let doc = createDocument(JSON.parse(req.body.metadata));
 
-    if (req.body.metadata) {
-
+            metaUnique(doc).then(unique => {
+                if (unique) { //proceed with upload
+                   let fd = new FormData();
+                   // @ts-ignore
+                    fd.append('file', req.files[0].buffer, req.files[0].originalname)
+                    axios.post('http://localhost:8080/upload', fd, { headers: fd.getHeaders()})
+                        .then(r => console.log(r))
+                        .catch(console.error);
+                } else {
+                    res.status(409);
+                    res.send({
+                        err: true,
+                        msg: "Document with that name already exists in the database."
+                    });
+                    res.end();
+                }
+            });
+        }
+        // check if metadata document would be unique
+        // send upload to file upload service
+        // upon upload completion insert metadata document
+        // Optional: Log upload
+        // return success to client
     }
-
-    //Metadata Verification/checks
-    //Request Upload Link from File Upload Service
-    //Forward pre-signed (PUT) link to frontend (DNS: file.upload.internal)
-    //Upload Metadata to Database
-    //Log Upload
-
-
-
 });
 
 router.post('/download', (req: Request, res: Response) => {
