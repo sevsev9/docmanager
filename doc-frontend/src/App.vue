@@ -57,7 +57,7 @@
 
 #user-dropdown {
   right: 0;
-  top: 15px;
+  top: 0.25em;
   position: absolute;
 }
 </style>

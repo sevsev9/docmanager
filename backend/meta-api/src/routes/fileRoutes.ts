@@ -3,7 +3,8 @@ import Router from "express";
 import {DocumentModel} from "../database/dbSchemas";
 import {checkDocument, createDocument} from "../protocol/Checks";
 import multer from "multer";
-let upload = multer({ storage: multer.memoryStorage() });
+
+let upload = multer({storage: multer.memoryStorage()});
 
 const router = Router();
 
@@ -12,20 +13,18 @@ router.post('/upload', upload.any(), (req: Request, res: Response) => {
     console.log(req.body.metadata);
     console.log(req.files);
 
-    if (false) {
-        //Metadata Verification/checks
-        //Request Upload Link from File Upload Service
-        //Forward pre-signed (PUT) link to frontend (DNS: file.upload.internal)
-        //Upload Metadata to Database
-        //Log Upload
-        res.redirect(307, process.env.FILE_UPLOAD_SERVICE_URL+"/upload");
-    } /*else {
-        res.status(400);
-        res.send({
-            error: true,
-            msg: "Malformed request: Body missing!"
-        });
-    }*/
+    if (req.body.metadata) {
+
+    }
+
+    //Metadata Verification/checks
+    //Request Upload Link from File Upload Service
+    //Forward pre-signed (PUT) link to frontend (DNS: file.upload.internal)
+    //Upload Metadata to Database
+    //Log Upload
+
+
+
 });
 
 router.post('/download', (req: Request, res: Response) => {
@@ -100,7 +99,7 @@ router.post('/file/bulk/upload', async (req: Request, res: Response) => {
  * Returns a list of file metadata for a user
  */
 router.get('/file/list:uid', (req: Request, res: Response) => {
-    DocumentModel.find({ $in: {"access.uid": req.params.uid!} } ,{"_id": false, }, undefined, (err, data) => {
+    DocumentModel.find({$in: {"access.uid": req.params.uid!}}, {"_id": false,}, undefined, (err, data) => {
         if (err) {
             res.status(500);
             res.send({

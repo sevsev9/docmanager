@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-button v-b-toggle.dashboard-sidebar style="position: absolute; top: 2em; left: 2em">
+    <b-button v-b-toggle.dashboard-sidebar style="position: absolute; top: 0.7em; left: 0.7em">
       <b-icon icon="layout-sidebar" v-if="!sidebar_state"></b-icon>
       <b-icon icon="layout-sidebar-inset" v-else></b-icon>
     </b-button>
