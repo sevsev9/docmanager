@@ -23,7 +23,16 @@ router.post('/upload', upload.any(), (req: Request, res: Response) => {
                    // @ts-ignore
                     fd.append('file', req.files[0].buffer, req.files[0].originalname)
                     axios.post('http://localhost:8080/upload', fd, { headers: fd.getHeaders()})
-                        .then(r => console.log(r))
+                        .then(res => {
+                            if (res.status === 200) { // file upload was successful
+                                // Create new Database entry of file
+                                doc.etag = res.data.eTag    // Set eTag for file identification and downloading.
+
+                                new DocumentModel(doc).save().then(r => {
+                                    console.log(`[Meta-Upload] Saved new document in database - name: ${r.name} etag: ${r.etag}`);
+                                });
+                            }
+                        })
                         .catch(console.error);
                 } else {
                     res.status(409);

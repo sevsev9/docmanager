@@ -25,7 +25,7 @@
           <b-form-textarea type="text" placeholder="Description" v-model="meta.description" required></b-form-textarea>
           <b-form-input type="text" placeholder="Content" v-model="meta.content"></b-form-input>
           <b-form-input type="date" placeholder="The date which the document was issued (optional)." v-model="meta.from"></b-form-input>
-          <b-button type="submit">Upload</b-button>
+          <b-button type="submit" :disabled="file1 === undefined">Upload</b-button>
         </b-form-group>
       </b-form>
     </div>

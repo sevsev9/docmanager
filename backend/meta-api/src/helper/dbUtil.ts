@@ -100,11 +100,7 @@ export function metaUnique(metadata: IDocument) {
       if (doc === null) {
         resolve(true);
       } else {
-        if (doc.length > 0) {
-          resolve(false);
-        } else {
-          resolve(true);
-        }
+        resolve(false);
       }
     } catch (e) {
       reject(e)

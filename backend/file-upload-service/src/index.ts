@@ -23,25 +23,70 @@ const minioClient:Client = new Client({
     secretKey: process.env.MINIO_SECRETKEY!
 });
 
-const upload = Multer({
-    storage: MulterMinIO({
-        // @ts-ignore
-        minio: minioClient,
-        bucketName: process.env.MINIO_BUCKET!,
-        metaData: function (req:any, file:any, cb:Function) {
-            cb(null, {fieldName: file.fieldname});
-        },
-        objectName: function (req:any, file:any, cb:Function) {
-            cb(null, ""+file.originalname);
+// const upload = Multer({
+//     storage: MulterMinIO({
+//         // @ts-ignore
+//         minio: minioClient,
+//         bucketName: process.env.MINIO_BUCKET!,
+//         metaData: function (req:any, file:any, cb:Function) {
+//             cb(null, {fieldName: file.fieldname});
+//         },
+//         objectName: function (req:any, file:any, cb:Function) {
+//             cb(null, ""+file.originalname);
+//         }
+//     })
+// });
+
+function formatSize(bytes: number | undefined, si = false, dp = 1) {
+    if (bytes) {
+
+
+        const thresh = si ? 1000 : 1024;
+
+        if (Math.abs(bytes) < thresh) {
+            return bytes + ' B';
         }
-    })
-});
 
-app.post("/upload", upload.array("file", 3), function (req, res) {
-    // @ts-ignore
-    res.send("Successfully uploaded " +req.files.length + " files!");
-});
+        const units = si
+            ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+            : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+        let u = -1;
+        const r = 10 ** dp;
 
+        do {
+            bytes /= thresh;
+            ++u;
+        } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+
+
+        return bytes.toFixed(dp) + ' ' + units[u];
+    } else {
+        return "-1 Bytes"
+    }
+}
+
+app.post("/upload", Multer({storage: Multer.memoryStorage()}).single("file"), function(req, res) {
+    if (req.file) {
+        minioClient.putObject(process.env.MINIO_BUCKET!, req.file.originalname, req.file.buffer, function(error, etag) {
+            if(error) {
+                return console.log(error);
+            }
+            res.status(200);
+            res.send({
+                err: false,
+                msg: "Successfully uploaded file!",
+                eTag: etag.etag
+            });
+            console.log(`[Upload] Uploaded new file with name: '${req.file?.originalname}' and size: ${formatSize(req.file?.size)}`);
+        })
+    } else {
+        res.status(400);
+        res.send({
+            err: true,
+            msg: "No files included."
+        })
+    }
+});
 //@TODO configure nginx ingress controller to change request headers according to (this)[https://stackoverflow.com/questions/64815229/nginx-controller-kubernetes-need-to-change-host-header-within-ingress] link.
 // nginx-ingress controller required for presigned urls with docker image
 app.get('/presigned/*', (req, res) => {

@@ -1,7 +1,7 @@
 export interface IDocument {
   name: string,
   type: Object,
-  eTag: string,
+  etag: string,
   size: Number, // number of the filesize in kB
   tags: Array<string>,
   category: string,
@@ -18,7 +18,7 @@ export interface IDocument {
 export class Document implements IDocument{
   name: string;
   type: Object;
-  eTag: string;
+  etag: string;
   size: Number;
   tags: Array<string>;
   category: string;
@@ -48,7 +48,7 @@ export class Document implements IDocument{
   ) {
     this.name = name;
     this.type = type;
-    this.eTag = eTag;
+    this.etag = eTag;
     this.size = size;
     this.tags = tags;
     this.category = category;
