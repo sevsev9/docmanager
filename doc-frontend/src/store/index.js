@@ -86,15 +86,10 @@ export default new Vuex.Store({
             if (!res.data.err) {
               data.router.push("/login")
             } else {
-              if (res.data.exist) {
-                alert("User with given email already exists");
-                data.router.push("/login");
-              }
-              console.log(res.data.err)
+              alert(res.data.msg);
             }
           }).catch(err => {
-            console.log(err);
-            alert(err);
+            alert(err.response.data.msg);
           });
         })
       })
@@ -142,7 +137,7 @@ export default new Vuex.Store({
       axios.post(API_ADDRESS + '/file/upload', data.formData, {onUploadProgress: data.onProgress}).then(res =>{
         data.onComplete(res)
       }).catch(err => {
-        console.log(err)
+        console.log(err.response.data.msg)
       })
     }
   },
@@ -168,4 +163,4 @@ export default new Vuex.Store({
   },
   modules: {},
   plugins: [createPersistedState()]
-})
+});

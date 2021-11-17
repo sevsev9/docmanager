@@ -80,6 +80,7 @@ export default {
       this.show = true;
       let fdata = new FormData();
       fdata.append('file', e.target[0].files[0]);
+      fdata.append('metadata', JSON.stringify(this.meta));
       this.$store.dispatch('uploadFile', {
         formData: fdata,
         onProgress: this.uploadProgress,
@@ -133,6 +134,15 @@ export default {
 .document-upload {
   width: 30%;
   margin: auto;
+}
+
+textarea {
+  margin-bottom: 2%;
+}
+
+input {
+  margin-bottom: 2%;
+  margin-top: 2%;
 }
 
 </style>

@@ -63,12 +63,20 @@ router.post('/register', (req: Request, res: Response) => {
     });
     res.end();
   }).catch((err: Error) => {
-    res.status(400);
-    console.log(JSON.stringify(err));
-    res.send({
-      err: true,
-      msg: err
-    })
+    // @ts-ignore
+    if (err.code === 11000) { // Duplicate Key error -> User exists
+      res.status(409);
+      res.send({
+        err: true,
+        msg: (Math.random() > 0.5) ? "User with this email is already registered." : "Bro we already know you, get yoself to the login page."
+      })
+    } else {
+      res.status(400);
+      res.send({
+        err: true,
+        msg: "Bad Request."
+      })
+    }
   });
 });
 

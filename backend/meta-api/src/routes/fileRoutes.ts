@@ -2,32 +2,30 @@ import {Request, Response} from "express";
 import Router from "express";
 import {DocumentModel} from "../database/dbSchemas";
 import {checkDocument, createDocument} from "../protocol/Checks";
-import axios from "axios";
+import multer from "multer";
+let upload = multer({ storage: multer.memoryStorage() });
 
 const router = Router();
 
 
-router.post('/upload', (req: Request, res: Response) => {
-    console.log(req.body.metadata)
-    if (req.body.metadata) {
-        if (req.body.metadata.icon) {   //is document
-            //@Todo add metadata
-            res.redirect(307, process.env.FILE_UPLOAD_SERVICE_URL+"/upload");
-        } else { //is icon
+router.post('/upload', upload.any(), (req: Request, res: Response) => {
+    console.log(req.body.metadata);
+    console.log(req.files);
 
-        }
+    if (false) {
         //Metadata Verification/checks
         //Request Upload Link from File Upload Service
         //Forward pre-signed (PUT) link to frontend (DNS: file.upload.internal)
         //Upload Metadata to Database
         //Log Upload
-    } else {
+        res.redirect(307, process.env.FILE_UPLOAD_SERVICE_URL+"/upload");
+    } /*else {
         res.status(400);
         res.send({
             error: true,
             msg: "Malformed request: Body missing!"
         });
-    }
+    }*/
 });
 
 router.post('/download', (req: Request, res: Response) => {
