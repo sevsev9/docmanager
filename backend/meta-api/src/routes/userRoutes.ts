@@ -132,6 +132,7 @@ router.post('/oauth/check/google', (req, res) => {
           req.session.user = _res;  //set the session user67
           res.status(200);
           res.send({
+            _id: _res._id,
             email: _res.email,
             nickname: _res.nickname,
             registration_date: _res.registration_date,
