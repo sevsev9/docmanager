@@ -129,6 +129,8 @@ export default new Vuex.Store({
             });  //Login the user
 
           }
+        }).catch(err => {
+          data.onError(err);
         })
       }
     },

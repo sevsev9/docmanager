@@ -37,6 +37,7 @@ export function login(password: string, email?: string) {
             } else if (data.length > 0) {
                 bcrypt.compare(password, data[0].password).then((res: any) => {
                     if (res) {
+                        
                         resolve(new User(
                             data[0]._id,
                             data[0].email,

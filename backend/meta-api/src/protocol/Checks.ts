@@ -38,6 +38,10 @@ export function createDocument(doc: Object) {
 
 export function createUser(usr: Object) {
     return new User(
+        //_id: string, email: string,
+        // password: string, permissions: Number,
+        // registration_date: Number, nickname: string
+        null,
         usr.email,
         usr.password,
         (usr.permissions) ? usr.permissions : 0,

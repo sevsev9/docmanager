@@ -56,11 +56,23 @@ export default {
       this.$store.dispatch('login', {
         email: this.form.email,
         password: this.form.password,
-        router
+        router,
+        onError: this.onError
       });
     },
+    onError(err) {
+      console.log(err);
+      this.$bvToast.toast('An error has occurred (see console for details).', {
+        title: 'Upload Error',
+        autoHideDelay: 5000,
+        appendToast: true,
+        variant: 'danger',
+        solid: true,
+        toaster: 'b-toaster-bottom-left'
+      })
+    },
     oauthLogin(provider) {
-      this.$store.dispatch('oAuthLogin', { provider: provider, service: this.$gAuth, router: this.$router})
+      this.$store.dispatch('oAuthLogin', { provider: provider, service: this.$gAuth, router: this.$router, onError: this.onError})
     }
   }
 }

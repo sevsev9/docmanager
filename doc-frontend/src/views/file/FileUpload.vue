@@ -86,7 +86,8 @@ export default {
       this.$store.dispatch('uploadFile', {
         formData: fdata,
         onProgress: this.uploadProgress,
-        onComplete: this.onComplete
+        onComplete: this.onComplete,
+        onError: this.onError
       });
     },
     uploadProgress(e) {
@@ -97,6 +98,17 @@ export default {
       setTimeout(() => {
         this.show = false;
       }, 500)
+    },
+    onError(err) {
+      console.log(err);
+      this.$bvToast.toast('An error has occurred (see console for details).', {
+        title: 'Upload Error',
+        autoHideDelay: 5000,
+        appendToast: true,
+        variant: 'danger',
+        solid: true,
+        toaster: 'b-toaster-bottom-left'
+      })
     },
     fileChange(e) {
       console.log(e.target.files[0])
