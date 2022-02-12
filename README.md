@@ -26,6 +26,8 @@ The aim of this application is to help people archive, sort, search and find ana
 - Upload Service: Port 8081
 - Download Service: Port 8082
 - Modify Service: Port 8083
+- Minio: Port 9000
+- Minio Console: Port 9001
 
 ### Frontend
 - Web Interface: Port 8080
