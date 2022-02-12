@@ -136,6 +136,7 @@ export default new Vuex.Store({
       Vue.prototype.$axios.post(API_ADDRESS + '/file/upload', data.formData, {onUploadProgress: data.onProgress}).then(res =>{
         data.onComplete(res)
       }).catch(err => {
+        data.onError(err.response.data);
         console.log(err.response.data.msg)
       })
     }
@@ -158,6 +159,9 @@ export default new Vuex.Store({
     },
     getRoute: state => {
       return state.nav
+    },
+    uid: state => {
+      return state.user.uid;
     }
   },
   modules: {},

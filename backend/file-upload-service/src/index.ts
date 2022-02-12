@@ -66,7 +66,7 @@ function formatSize(bytes: number | undefined, si = false, dp = 1) {
 }
 
 app.post("/upload", Multer({storage: Multer.memoryStorage()}).single("file"), function(req, res) {
-    if (req.file) {
+    if (req.file && req.body.uid) {
         minioClient.putObject(process.env.MINIO_BUCKET!, req.file.originalname, req.file.buffer, function(error, etag) {
             if(error) {
                 return console.log(error);
@@ -83,7 +83,7 @@ app.post("/upload", Multer({storage: Multer.memoryStorage()}).single("file"), fu
         res.status(400);
         res.send({
             err: true,
-            msg: "No files included."
+            msg: `Request parameter mismatch. ${req.body.uid ? 'User ID' : ''} ${req.file ? 'File': ''} missing.`;
         })
     }
 });

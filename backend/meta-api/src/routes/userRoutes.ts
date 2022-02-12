@@ -87,6 +87,7 @@ router.post('/login', (req: Request, res: Response) => {
       req.session.user = r;
       res.status(200);
       res.send({
+        uid: r._id,
         email: r.email,
         nickname: r.nickname,
         registration_date: r.registration_date

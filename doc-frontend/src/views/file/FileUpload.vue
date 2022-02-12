@@ -82,6 +82,7 @@ export default {
       let fdata = new FormData();
       fdata.append('file', e.target[0].files[0]);
       fdata.append('metadata', JSON.stringify(this.meta));
+      fdata.append('uid', this.$store.getters.userID);
       this.$store.dispatch('uploadFile', {
         formData: fdata,
         onProgress: this.uploadProgress,
