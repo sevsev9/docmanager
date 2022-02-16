@@ -23,7 +23,7 @@ The aim of this application is to help people archive, sort, search and find ana
 ## Default Port Maps
 ### Backend
 - Meta API: 8000
-- Upload Service: Port 8081
+- Upload Service: Port 8083
 - Download Service: Port 8082
 - Modify Service: Port 8083
 - Minio: Port 9000
