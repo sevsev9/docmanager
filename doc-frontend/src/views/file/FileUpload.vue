@@ -32,7 +32,7 @@
 
     <b-overlay no-wrap :show="show" rounded>
       <template #overlay>
-        <div class="text-center p-4 bg-primary text-light rounded">
+        <div v-if="!success" class="text-center p-4 bg-primary text-light rounded">
           <b-icon icon="cloud-upload" font-scale="4"></b-icon>
           <div class="mb-3">Processing...</div>
           <b-progress
@@ -44,7 +44,7 @@
               class="mx-n4 rounded-0"
           ></b-progress>
         </div>
-        <div v-if="success">
+        <div v-else>
           Successfully uploaded!
         </div>
       </template>
@@ -97,7 +97,8 @@ export default {
       this.success = true;
       setTimeout(() => {
         this.show = false;
-      }, 500)
+        this.success = false;
+      }, 1000);
     },
     onError(err) {
       console.log(err);
@@ -108,10 +109,10 @@ export default {
         variant: 'danger',
         solid: true,
         toaster: 'b-toaster-bottom-left'
-      })
+      });
+      this.show = false;
     },
     fileChange(e) {
-      console.log(e.target.files[0])
       this.meta.name = e.target.files[0].name
       this.meta.type = e.target.files[0].type
       this.meta.size = e.target.files[0].size //size in bytes

@@ -135,11 +135,10 @@ export default new Vuex.Store({
       }
     },
     uploadFile(context, data) {
-      Vue.prototype.$axios.post(API_ADDRESS + '/file/upload', data.formData, {onUploadProgress: data.onProgress}).then(res =>{
+      Vue.prototype.$axios.post(API_ADDRESS + '/file/upload', data.formData, {onUploadProgress: data.onProgress, maxBodyLength: Infinity, maxContentLength: Infinity}).then(res =>{
         data.onComplete(res)
       }).catch(err => {
         data.onError(err.response.data);
-        console.log(err.response.data.msg)
       })
     }
   },

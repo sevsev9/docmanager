@@ -62,7 +62,7 @@ export default {
     },
     onError(err) {
       console.log(err);
-      this.$bvToast.toast('An error has occurred (see console for details).', {
+      this.$bvToast.toast(err.message, {
         title: 'Upload Error',
         autoHideDelay: 5000,
         appendToast: true,

@@ -2,12 +2,12 @@ import express, {Application, Request, Response, NextFunction} from "express";
 import {Client} from "minio";
 import Multer from "multer";
 const MulterMinIO = require("multer-minio-storage-engine");
-import bodyParser from "body-parser";
 
 require('dotenv').config({ path: __dirname+"/../.env"});
 
 const app:Application = express();
-app.use(bodyParser.json({limit: "4mb"}));
+app.use(express.json({limit: "2gb"}));
+app.use(express.urlencoded({limit: "2gb"}));
 // Enable CORS
 app.use(function(req, res, next) {
     res.set("Access-Control-Allow-Origin", "*");
@@ -69,22 +69,23 @@ app.post("/upload", Multer({storage: Multer.memoryStorage()}).single("file"), fu
     if (req.file && req.body.uid) {
         minioClient.putObject(process.env.MINIO_BUCKET!, req.file.originalname, req.file.buffer, function(error, etag) {
             if(error) {
-                return console.log(error);
+                console.log(error);
+                res.status(500);
+                res.send(error);
+                res.end();
             }
             res.status(200);
             res.send({
-                err: false,
                 msg: "Successfully uploaded file!",
                 eTag: etag.etag
             });
+            res.end();
             console.log(`[Upload] Uploaded new file with name: '${req.file?.originalname}' and size: ${formatSize(req.file?.size)}`);
         })
     } else {
         res.status(400);
-        res.send({
-            err: true,
-            msg: `Request parameter mismatch. ${req.body.uid ? 'User ID' : ''} ${req.file ? 'File': ''} missing.`;
-        })
+        res.send(`Request parameter mismatch. ${req.body.uid ? 'User ID' : ''} ${req.file ? 'File': ''} missing.`);
+        res.end();
     }
 });
 //@TODO configure nginx ingress controller to change request headers according to (this)[https://stackoverflow.com/questions/64815229/nginx-controller-kubernetes-need-to-change-host-header-within-ingress] link.

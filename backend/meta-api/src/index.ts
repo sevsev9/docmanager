@@ -36,8 +36,8 @@ app.use(function(req, res, next) {
   res.set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({extended: false, limit: '2gb'}));
+app.use(express.json({limit: '2gb'}));
 
 app.use("/user", userRouter);
 app.use("/file", fileRouter)

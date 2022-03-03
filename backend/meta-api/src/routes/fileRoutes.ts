@@ -27,8 +27,9 @@ router.post('/upload', upload.any(), (req: Request, res: Response) => {
                     if (unique) { //proceed with upload
                         let fd = new FormData();
                         // @ts-ignore
-                        fd.append('file', req.files[0].buffer, doc.owner + "_" + req.files[0].originalname)
-                        axios.post('http://localhost:8080/upload', fd, { headers: fd.getHeaders()})
+                        fd.append('file', req.files[0].buffer, doc.owner + "_" + req.files[0].originalname);
+                        fd.append('uid', doc.owner);
+                        axios.post(process.env.FILE_UPLOAD_URL!, fd, { headers: fd.getHeaders(), maxBodyLength: Infinity, maxContentLength: Infinity})
                             .then(_res => {
                                 if (_res.status === 200) { // file upload was successful
                                     // Create new Database entry of file
@@ -36,21 +37,19 @@ router.post('/upload', upload.any(), (req: Request, res: Response) => {
 
                                     new DocumentModel(doc).save().then(r => {
                                         res.status(200);
-                                        res.send({
-                                            err: false,
-                                            msg: "Successfully uploaded given file"
-                                        })
+                                        res.send("Successfully uploaded given file");
                                         console.log(`[Meta-Upload] Saved new document in database - name: ${r.name} etag: ${r.etag}`);
                                     });
                                 }
                             })
-                            .catch(console.error);
+                            .catch(err => {
+                                res.status(500);
+                                res.send(err);
+                                res.end();
+                            });
                     } else {
                         res.status(409);
-                        res.send({
-                            err: true,
-                            msg: "Document with that name already exists in the database."
-                        });
+                        res.send("Document with that name already exists in the database.");
                         res.end();
                     }
                 });
