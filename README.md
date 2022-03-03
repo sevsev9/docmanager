@@ -20,3 +20,14 @@ The aim of this application is to help people archive, sort, search and find ana
     - Express / +Session
     - mongoose (MongoDB)
     - minio self-hosted s3 buckets
+## Default Port Maps
+### Backend
+- Meta API: 8000
+- Upload Service: Port 8083
+- Download Service: Port 8082
+- Modify Service: Port 8083
+- Minio: Port 9000
+- Minio Console: Port 9001
+
+### Frontend
+- Web Interface: Port 8080
